@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="JCheckersServer">
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <dependent-module archiveName="processes.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/processes/processes">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="databases.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/databases/databases">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="common_lib.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/common_lib/common_lib">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="json.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/json/json">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="JCheckersCommon.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/JCheckersCommon/JCheckersCommon">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="JCheckersServer"/>
+        <property name="java-output-path" value="/JCheckersServer/build/classes"/>
+    </wb-module>
+</project-modules>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<web-app xmlns:javaee="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <servlet>
+    <javaee:description>JCheckers Server Initializer</javaee:description>
+    <javaee:display-name>Inicializador</javaee:display-name>
+    <servlet-name>Initializer</servlet-name>
+    <servlet-class>jcheckers.server.servlet.Initializer</servlet-class>
+    <load-on-startup>0</load-on-startup>
+  </servlet>
+  <servlet>
+    <javaee:description>JCheckers Server Core Servlet</javaee:description>
+    <javaee:display-name>Core Servlet</javaee:display-name>
+    <servlet-name>CoreServlet</servlet-name>
+    <servlet-class>jcheckers.server.servlet.CoreServlet</servlet-class>
+  </servlet>
+  <javaee:display-name>JCheckers Server</javaee:display-name>
+  <javaee:description>JCheckers Server</javaee:description>
+</web-app>

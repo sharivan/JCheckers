@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<config>
+	<log path='logs' />
+	<db
+		driver_name='jdbc:mysql'
+		driver_class='org.gjt.mm.mysql.Driver'
+		host='localhost'
+		port='3306'
+		name='jcheckers'
+		username='<seu usuário no mysql>'
+		password='<sua senha no mysql>'
+	/>
+	
+	<servers>
+		<server name='draughts' class='jcheckers.server.net.boards.draughts.DraughtsServer' />
+	</servers>
+</config>
