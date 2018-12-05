@@ -61,9 +61,22 @@ public abstract class Room extends Base {
 		return withAdmin;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	protected void parseData(int opcode, JCheckersDataInputStream in) throws IOException {
 		switch (opcode) {
+			case InputProtocol.COULD_NOT_CONNECT_TO_THE_ROOM: {
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof RoomConnectionListener)
+						try {
+							((RoomConnectionListener) listener).onCouldNotConnectToTheRoom(connection);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
 			case InputProtocol.UPDATE_TABLE: {
 				int id = in.readInt();
 				Table table = tablesHash.get(id);
@@ -106,6 +119,58 @@ public abstract class Room extends Base {
 						} catch (Throwable e) {
 							e.printStackTrace();
 						}
+
+				break;
+			}
+
+			case InputProtocol.INVITED: {
+				String invitedName = in.readString();
+				int invitedID = in.readInt();
+				int tableID = in.readInt();
+				in.readUChar();
+				UserStats inviterStats = connection.createUserStats(invitedName, invitedID, in);
+				int tableNumber = in.readInt();
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof RoomConnectionListener)
+						try {
+							((RoomConnectionListener) listener).onInvited(connection, tableID, tableNumber, inviterStats);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case InputProtocol.ROOM_CHANGED: {
+				int roomIndex = in.readInt();
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof RoomConnectionListener)
+						try {
+							((RoomConnectionListener) listener).onRoomChanged(connection, roomIndex);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case InputProtocol.ROOM_LIST: {
+				int count = in.readUShort();
+				for (int i = 0; i < count; i++) {
+					int op = in.readUChar();
+					int roomIndex = in.readInt();
+					String roomName = in.readString();
+					int roomID = in.readUShort();
+					int userCount = in.readUShort();
+					int tableCount = in.readUShort();
+					int flags = in.readUChar();
+				}
+
+				// TODO Implementar
+
+				break;
 			}
 
 			default:

@@ -88,7 +88,9 @@ public class TableListPanel extends JPanel {
 			entry.addListener(listener);
 
 		entries.add(entry);
-		entryPanel.validate();
+
+		entryPanel.revalidate();
+		entryPanel.repaint();
 	}
 
 	public void addEntry(Table table) {
@@ -141,7 +143,8 @@ public class TableListPanel extends JPanel {
 			entryPanel.add(entry, gbc_entry, i);
 		}
 
-		entryPanel.validate();
+		entryPanel.revalidate();
+		entryPanel.repaint();
 	}
 
 	public void removeEntry(int index) {
@@ -152,7 +155,8 @@ public class TableListPanel extends JPanel {
 		for (TableEntryListener listener : listeners)
 			entry.removeListener(listener);
 
-		entryPanel.validate();
+		entryPanel.revalidate();
+		entryPanel.repaint();
 	}
 
 	public void removeEntry(Table table) {
@@ -184,7 +188,9 @@ public class TableListPanel extends JPanel {
 		entry.setSit1Visible(player1 == null);
 		entry.setPlayer2(player2 != null ? player2 : "");
 		entry.setSit2Visible(player2 == null);
-		entryPanel.validate();
+
+		entryPanel.revalidate();
+		entryPanel.repaint();
 	}
 
 	public void updateEntry(Table table) {

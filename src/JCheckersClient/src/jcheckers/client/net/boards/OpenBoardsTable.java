@@ -1,13 +1,15 @@
 package jcheckers.client.net.boards;
 
+import java.io.IOException;
+
 import jcheckers.client.io.OutputProtocol;
+import jcheckers.client.io.boards.BoardsInputProtocol;
 import jcheckers.client.io.boards.BoardsOutputProtocol;
 import jcheckers.client.net.Connection;
+import jcheckers.client.net.ConnectionListener;
 import jcheckers.client.net.OpenTable;
-import jcheckers.client.net.User;
 import jcheckers.common.io.JCheckersDataInputStream;
 import jcheckers.common.io.JCheckersDataOutputStream;
-import jcheckers.common.io.JCheckersIOException;
 
 public abstract class OpenBoardsTable extends OpenTable {
 
@@ -34,10 +36,189 @@ public abstract class OpenBoardsTable extends OpenTable {
 	}
 
 	@Override
-	protected void readUser(User user, JCheckersDataInputStream input) throws JCheckersIOException {
-		super.readUser(user, input);
+	protected void parseData(int opcode, JCheckersDataInputStream in) throws IOException {
+		switch (opcode) {
+			case BoardsInputProtocol.GAME_PAUSED: {
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof BoardsTableConnectionListener)
+						try {
+							((BoardsTableConnectionListener) listener).onGamePaused(connection);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
 
-		((BoardsUser) user).rating = input.readInt();
+				break;
+			}
+
+			case BoardsInputProtocol.HIDE_CONTROLS: {
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof BoardsTableConnectionListener)
+						try {
+							((BoardsTableConnectionListener) listener).onHideControls(connection);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case BoardsInputProtocol.PLAYER_ACCEPTED_DRAW: {
+				String name = in.readString();
+				int id = in.readInt();
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof BoardsTableConnectionListener)
+						try {
+							((BoardsTableConnectionListener) listener).onPlayerAcceptedDraw(connection, name, id);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case BoardsInputProtocol.PLAYER_ACCEPTED_UNDO_MOVE: {
+				String name = in.readString();
+				int id = in.readInt();
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof BoardsTableConnectionListener)
+						try {
+							((BoardsTableConnectionListener) listener).onPlayerAcceptedUndoMove(connection, name, id);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case BoardsInputProtocol.PLAYER_OFFERED_DRAW: {
+				String name = in.readString();
+				int id = in.readInt();
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof BoardsTableConnectionListener)
+						try {
+							((BoardsTableConnectionListener) listener).onPlayerOfferedDraw(connection, name, id);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case BoardsInputProtocol.PLAYER_REJECTED_DRAW: {
+				String name = in.readString();
+				int id = in.readInt();
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof BoardsTableConnectionListener)
+						try {
+							((BoardsTableConnectionListener) listener).onPlayerRejectedDraw(connection, name, id);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case BoardsInputProtocol.PLAYER_REJECTED_PAUSE_GAME: {
+				String name = in.readString();
+				int id = in.readInt();
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof BoardsTableConnectionListener)
+						try {
+							((BoardsTableConnectionListener) listener).onPlayerRejectedPauseGame(connection, name, id);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case BoardsInputProtocol.PLAYER_REJECTED_UNDO_MOVE: {
+				String name = in.readString();
+				int id = in.readInt();
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof BoardsTableConnectionListener)
+						try {
+							((BoardsTableConnectionListener) listener).onPlayerRejectedUndoMove(connection, name, id);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case BoardsInputProtocol.PLAYER_SUGGESTED_PAUSE_GAME: {
+				String name = in.readString();
+				int id = in.readInt();
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof BoardsTableConnectionListener)
+						try {
+							((BoardsTableConnectionListener) listener).onPlayerSuggestedPauseGame(connection, name, id);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case BoardsInputProtocol.PLAYER_SUGGESTED_UNDO_MOVE: {
+				String name = in.readString();
+				int id = in.readInt();
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof BoardsTableConnectionListener)
+						try {
+							((BoardsTableConnectionListener) listener).onPlayerSuggestedUndoMove(connection, name, id);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case BoardsInputProtocol.RATING_CHANGE: {
+				int count = in.readUChar();
+				RatingChange[] ratingChanges = new RatingChange[count];
+				for (int i = 0; i < count; i++) {
+					int sitIndex = in.readUChar();
+					String name = in.readString();
+					int gain = in.readInt();
+					int rating = in.readInt();
+					ratingChanges[i] = new RatingChange(sitIndex, name, gain, rating);
+				}
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof BoardsTableConnectionListener)
+						try {
+							((BoardsTableConnectionListener) listener).onRatingChanges(connection, ratingChanges);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case BoardsInputProtocol.RATING_TOO_HIGH: {
+				for (ConnectionListener listener : listeners)
+					if (listener != null && listener instanceof BoardsTableConnectionListener)
+						try {
+							((BoardsTableConnectionListener) listener).onRatingTooHigh(connection);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			default:
+				super.parseData(opcode, in);
+		}
 	}
 
 	public void rejectDraw() {

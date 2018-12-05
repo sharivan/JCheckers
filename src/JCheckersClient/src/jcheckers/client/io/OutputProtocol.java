@@ -58,6 +58,13 @@ public class OutputProtocol {
 		output.flush();
 	}
 
+	public void pong(int src, int dst) {
+		output.writeUChar(opcodes[PONG]);
+		output.writeInt(dst);
+		output.writeInt(src);
+		output.flush();
+	}
+
 	public void sendMessageToChat(String message) {
 		output.writeUChar(opcodes[SEND_CHAT_MESSAGE]);
 		output.writeEasyString(message);

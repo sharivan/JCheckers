@@ -31,6 +31,8 @@ import jcheckers.client.net.Table;
 import jcheckers.client.net.Table.Seat;
 import jcheckers.client.net.TableParams;
 import jcheckers.client.net.User;
+import jcheckers.client.net.UserStats;
+import jcheckers.client.net.boards.RatingChange;
 import jcheckers.client.net.boards.draughts.DraughtsConnection;
 import jcheckers.client.net.boards.draughts.DraughtsTable;
 import jcheckers.client.net.boards.draughts.DraughtsTableConnectionListener;
@@ -63,6 +65,22 @@ public class TableFrame extends JFrame {
 		}
 
 		@Override
+		public void onAlreadyConnected(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Você já está conectado a esta mesa."));
+		}
+
+		@Override
+		public void onAvatars(Connection c, int[] avatars) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onBanned(Connection c, String bannedUntil) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Você foi banido desta sala até " + bannedUntil));
+		}
+
+		@Override
 		public void onChat(Connection c, String sender, String message) {
 			EventQueue.invokeLater(() -> handleChat(sender, message));
 		}
@@ -73,13 +91,74 @@ public class TableFrame extends JFrame {
 		}
 
 		@Override
+		public void onConnectionRefused(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Conexão recusada."));
+		}
+
+		@Override
+		public void onContinueGame(Connection c) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onCouldNotReconnectToTheTable(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Não foi possível reconectar à mesa, tente novamente depois."));
+		}
+
+		@Override
 		public void onError(Connection c, Throwable e) {
 			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Erro: " + e.getMessage()));
 		}
 
 		@Override
+		public void onGamePaused(Connection c) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage("Jogo pausado."));
+		}
+
+		@Override
 		public void onGameState(DraughtsConnection c, int gameID, int gameType, boolean running, int gameState, int currentTurn, int timePerTurn, int[] times, DraughtsMove[] moves) {
 			EventQueue.invokeLater(() -> handleGameState(gameID, gameType, running, gameState, currentTurn, timePerTurn, times, moves));
+		}
+
+		@Override
+		public void onHideControls(Connection c) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onInvalidPassword(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Senha incorreta."));
+		}
+
+		@Override
+		public void onInvalidRoom(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Sala inválida."));
+		}
+
+		@Override
+		public void onInviationAutoRejected(Connection c, String name, int id) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onInviationRejected(Connection c, String name, int id) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onInviationSent(Connection c, String name, int id) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onInviationsInactive(Connection c) {
+			// TODO Auto-generated method stub
+
 		}
 
 		@Override
@@ -93,12 +172,99 @@ public class TableFrame extends JFrame {
 		}
 
 		@Override
+		public void onKickedByHost(Connection c, String kickedName, int kickedID, String kickerName, int kickerID) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage((kickedName == null ? "Você" : kickedName) + " foi expulso por " + kickerName));
+		}
+
+		@Override
 		public void onLeaveUser(Connection c, User user) {
 			EventQueue.invokeLater(() -> roomUserList.removeEntry((DraughtsUser) user));
 		}
 
 		@Override
+		public void onNoEnoughPlayersToStartTheGame(Connection c) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
 		public void onOpen(Connection c) {
+
+		}
+
+		@Override
+		public void onParametersChangedBy(Connection c, int id, String name) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage("Os parâmetros da mesa foram alterados por " + name));
+		}
+
+		@Override
+		public void onPlayerAcceptedDraw(Connection c, String name, int id) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage(name + " aceitou o empate."));
+		}
+
+		@Override
+		public void onPlayerAcceptedUndoMove(Connection c, String name, int id) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage(name + " aceitou voltar a jogada."));
+		}
+
+		@Override
+		public void onPlayerNotFoundInServer(Connection c, String name) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Usuário " + name + " não foi encontrado no servidor."));
+		}
+
+		@Override
+		public void onPlayerOfferedDraw(Connection c, String name, int id) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage(name + " ofereceu empate."));
+		}
+
+		@Override
+		public void onPlayerReconnectingFailed(Connection c, String name, int id) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage(name + " não conseguiu se reconectar à mesa."));
+		}
+
+		@Override
+		public void onPlayerRejectedDraw(Connection c, String name, int id) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage(name + " rejeitou o empate."));
+		}
+
+		@Override
+		public void onPlayerRejectedPauseGame(Connection c, String name, int id) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage(name + " rejeitou pausar o jogo."));
+		}
+
+		@Override
+		public void onPlayerRejectedUndoMove(Connection c, String name, int id) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage(name + " rejeitou desfazer a última jogada."));
+		}
+
+		@Override
+		public void onPlayersInTheSameLocalNetwork(Connection c, String[] names) {
+			EventQueue.invokeLater(() -> handlePlayersOnTheSameLocalNetwork(names));
+		}
+
+		@Override
+		public void onPlayerStandUp(Connection c, String name, int id) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage(name + " levantou-se da mesa."));
+		}
+
+		@Override
+		public void onPlayerSuggestedPauseGame(Connection c, String name, int id) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage(name + " sugeriu pausar o jogo."));
+		}
+
+		@Override
+		public void onPlayerSuggestedUndoMove(Connection c, String name, int id) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage(name + " sugeriu desfazer a última jogada."));
+		}
+
+		@Override
+		public void onPlayerTryingToReconnect(Connection c, String name, int id) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage(name + " foi desconectado da mesa e está tentando reconectar."));
+		}
+
+		@Override
+		public void onPong(Connection c, int src, int dst) {
+			// TODO Auto-generated method stub
 
 		}
 
@@ -108,8 +274,63 @@ public class TableFrame extends JFrame {
 		}
 
 		@Override
+		public void onPrivateTable(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Mesa privada."));
+		}
+
+		@Override
+		public void onQuestionBits(Connection c, int acceptedBits, int rejectedBits) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onQuestionCanceled(Connection c) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onRatingChanges(Connection c, RatingChange[] ratingChanges) {
+			EventQueue.invokeLater(() -> handleRatingChanges(ratingChanges));
+		}
+
+		@Override
+		public void onRatingTooHigh(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Sua pontuação é muito alta."));
+		}
+
+		@Override
+		public void onResponseInfo(Connection c, UserStats stats, int[] tables, int inactiveTime) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onServerShuttingDown(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Servidor está sendo desligado."));
+		}
+
+		@Override
+		public void onServerVersion(Connection c, String version, String lastRelease) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage("Server - Version: " + version + " - Last Release: " + lastRelease));
+		}
+
+		@Override
 		public void onStartGame(Connection c) {
 			EventQueue.invokeLater(() -> handleStartGame());
+		}
+
+		@Override
+		public void onStartGameSuggested(Connection c, String name, int id, boolean dontAsk) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onStartGameSuggestRejected(Connection c, String name, int id) {
+			// TODO Auto-generated method stub
+
 		}
 
 		@Override
@@ -118,13 +339,111 @@ public class TableFrame extends JFrame {
 		}
 
 		@Override
+		public void onStopGameSuggested(Connection c, String name, int id, boolean dontAsk) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onStopGameSuggestRejected(Connection c, String name, int id) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onTableClosedBy(Connection c, int id) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "A mesa foi fechada por " + table.getUserByID(id).getName()));
+		}
+
+		@Override
+		public void onTableFocus(Connection c, int flags) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onTableNotExist(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Mesa não existe."));
+		}
+
+		@Override
+		public void onTransferHost(Connection c, String newHostName, int newHostID, String oldHostName, int oldHostID) {
+			EventQueue.invokeLater(() -> handleTransferHost(newHostName, oldHostName));
+		}
+
+		@Override
 		public void onUpdate(Connection c, Table table) {
 			EventQueue.invokeLater(() -> handleTableUpdate((DraughtsTable) table));
 		}
 
 		@Override
+		public void onUpdateUsers(Connection c, User[] users) {
+			EventQueue.invokeLater(() -> roomUserList.updateEntries(users));
+		}
+
+		@Override
 		public void onUserList(Connection c, User[] users) {
 			EventQueue.invokeLater(() -> roomUserList.addEntries(users));
+		}
+
+		@Override
+		public void onWatchersNotAllowed(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Espectadores não permitidos."));
+		}
+
+		@Override
+		public void onWelcome(Connection c, String roomName) {
+
+		}
+
+		@Override
+		public void onYouCantBootAPlayerNotInServer(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Você não pode expulsar um usuário que não está no servidor."));
+		}
+
+		@Override
+		public void onYouCantChangeParametersNow(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Você não pode alterar os parâmetros da mesa agora."));
+		}
+
+		@Override
+		public void onYouCantInviteAPlayerAlreadyInTheTable(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Você não pode convidar um usuário que já está na mesa."));
+		}
+
+		@Override
+		public void onYouCantInviteAPlayerNotInServer(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Você não pode convidar um usuário que não está no servidor."));
+		}
+
+		@Override
+		public void onYouCantInviteYourself(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Você não pode convidar a você mesmo."));
+		}
+
+		@Override
+		public void onYouCantTransferHostToAPlayerNotInServer(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Você não pode transferir o host para um usuário que não está no servidor."));
+		}
+
+		@Override
+		public void onYouCantTransferHostToYourself(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Você não pode transferir o host para você mesmo."));
+		}
+
+		@Override
+		public void onYoureNotTheHostToChangeParameters(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Você não pode alterar os parâmetros da mesa, você não é o host."));
+		}
+
+		@Override
+		public void onYoureNotTheHostToInvitePlayers(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Você não pode convidar pessoas para a mesa, você não é o host."));
+		}
+
+		@Override
+		public void onYoureNotTheHostToTransferHost(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Você não pode transferir o host, você não é o host."));
 		}
 
 	}
@@ -521,12 +840,12 @@ public class TableFrame extends JFrame {
 		pnlCenter = new JPanel();
 		contentPane.add(pnlCenter, BorderLayout.CENTER);
 		GridBagLayout gbl_pnlCenter = new GridBagLayout();
-		gbl_pnlCenter.columnWidths = new int[]{500, 0};
-		gbl_pnlCenter.rowHeights = new int[]{497, 130, 0};
-		gbl_pnlCenter.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_pnlCenter.rowWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		gbl_pnlCenter.columnWidths = new int[] { 500, 0 };
+		gbl_pnlCenter.rowHeights = new int[] { 497, 130, 0 };
+		gbl_pnlCenter.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_pnlCenter.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		pnlCenter.setLayout(gbl_pnlCenter);
-		
+
 		board = new GameBoard(imgList, game);
 		board.setPreferredSize(new Dimension(500, 500));
 		board.setSize(new Dimension(500, 500));
@@ -535,14 +854,14 @@ public class TableFrame extends JFrame {
 		gbc_board.gridx = 0;
 		gbc_board.gridy = 0;
 		pnlCenter.add(board, gbc_board);
-		
-				pnlChat = new ChatPanel();
-				pnlChat.addListener((message) -> sendMessageToChat(message));
-				GridBagConstraints gbc_pnlChat = new GridBagConstraints();
-				gbc_pnlChat.fill = GridBagConstraints.BOTH;
-				gbc_pnlChat.gridx = 0;
-				gbc_pnlChat.gridy = 1;
-				pnlCenter.add(pnlChat, gbc_pnlChat);
+
+		pnlChat = new ChatPanel();
+		pnlChat.addListener((message) -> sendMessageToChat(message));
+		GridBagConstraints gbc_pnlChat = new GridBagConstraints();
+		gbc_pnlChat.fill = GridBagConstraints.BOTH;
+		gbc_pnlChat.gridx = 0;
+		gbc_pnlChat.gridy = 1;
+		pnlCenter.add(pnlChat, gbc_pnlChat);
 
 		roomUserList = new UserListPanel();
 
@@ -654,7 +973,7 @@ public class TableFrame extends JFrame {
 				game.doMove(new BoardMove(src, dst), true, true);
 			}
 		}
-		
+
 		this.currentTurn = currentTurn;
 
 		turnNum = moves.length;
@@ -663,16 +982,27 @@ public class TableFrame extends JFrame {
 		btnResign.setEnabled(imPlaying());
 	}
 
-	private boolean imPlaying() {
-		return imSiting() && running;
-	}
+	private void handlePlayersOnTheSameLocalNetwork(String[] names) {
+		if (names.length < 2)
+			return;
 
-	private boolean imWhite() {
-		return imSiting() && myTurn == 0;
+		String message = names[0];
+		for (int i = 1; i < names.length - 1; i++)
+			message += ", " + names[i];
+
+		message += " e " + names[names.length - 1] + " estão na mesma rede local.";
+
+		pnlChat.appendAlertMessage(message);
 	}
 
 	private void handlePrivateChat(String sender, String message) {
 		pnlChat.appendPrivateMessage(sender, message);
+	}
+
+	private void handleRatingChanges(RatingChange[] ratingChanges) {
+		for (RatingChange change : ratingChanges)
+			pnlChat.appendSystemMessage("A pontuação do jogador " + change.getName() + " foi alterada de " + (change.getRating() - change.getGain()) + " para " + change.getRating() + " ("
+					+ (change.getGain() >= 0 ? "+" : "") + change.getGain() + ")");
 	}
 
 	private void handleStartGame() {
@@ -713,10 +1043,6 @@ public class TableFrame extends JFrame {
 
 		board.setLocked(!isMyTurn());
 		btnRefreshTableParameters.setEnabled(imHost() && !running);
-	}
-
-	private boolean imHost() {
-		return table.getHostID() == connection.getMyID();
 	}
 
 	private void handleStopGame() {
@@ -766,18 +1092,37 @@ public class TableFrame extends JFrame {
 		btnResign.setEnabled(game.isRunning());
 
 		updateTableParameters(table.getParams());
-		
+
 		board.setRotated(imWhite());
 		board.setLocked(!isMyTurn());
 		btnRefreshTableParameters.setEnabled(imHost() && !running);
+	}
+
+	private void handleTransferHost(String newHostName, String oldHostName) {
+		if (oldHostName == null)
+			pnlChat.appendSystemMessage("Você recebeu o status de host do servidor.");
+		else
+			pnlChat.appendSystemMessage((newHostName == null ? "Você recebeu o status de host de " + oldHostName : oldHostName + " transferiu o status de host para " + newHostName) + ".");
 	}
 
 	private boolean iCanSit() {
 		return !imSiting() && table.getSeatCount() < table.getMaxSeatCount();
 	}
 
+	private boolean imHost() {
+		return table.getHostID() == connection.getMyID();
+	}
+
+	private boolean imPlaying() {
+		return imSiting() && running;
+	}
+
 	private boolean imSiting() {
 		return myTurn != -1;
+	}
+
+	private boolean imWhite() {
+		return imSiting() && myTurn == 0;
 	}
 
 	private boolean isMyTurn() {

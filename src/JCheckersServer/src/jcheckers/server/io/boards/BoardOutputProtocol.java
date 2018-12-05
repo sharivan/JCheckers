@@ -11,7 +11,7 @@ public class BoardOutputProtocol extends OutputProtocol {
 	public static final int PLAYER_SUGGESTED_PAUSE_GAME = 0xa3; // string name,
 																// int id, int
 																// time
-	public static final int PLAYER_REJECTED_PAUSE_GAME = 0xa6; // string name,
+	public static final int PLAYER_REJECTED_PAUSE_GAME = 0xa7; // string name,
 																// int id
 	public static final int PLAYER_OFFERED_DRAW = 0xb4; // string name, int id
 	public static final int PLAYER_REJECTED_DRAW = 0xb7; // string name, int id
@@ -122,6 +122,7 @@ public class BoardOutputProtocol extends OutputProtocol {
 		RESPONSE_OPCODES[START_GAME_SUGGEST_REJECTED] = 0x96;
 		RESPONSE_OPCODES[STOP_GAME_SUGGESTED] = 0x99;
 		RESPONSE_OPCODES[STOP_GAME_SUGGEST_REJECTED] = 0x9c;
+		RESPONSE_OPCODES[PLAYER_REJECTED_PAUSE_GAME] = 0xa6;
 		RESPONSE_OPCODES[QUESTION_BITS] = 0xc1;
 		RESPONSE_OPCODES[QUESTION_CANCELED] = 0xc2;
 		RESPONSE_OPCODES[STOP_GAME] = 0xc4;

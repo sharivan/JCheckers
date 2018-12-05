@@ -4,6 +4,7 @@ import jcheckers.client.net.OpenTable;
 import jcheckers.client.net.Room;
 import jcheckers.client.net.Table;
 import jcheckers.client.net.User;
+import jcheckers.client.net.UserStats;
 import jcheckers.client.net.boards.BoardsConnection;
 import jcheckers.common.io.JCheckersDataInputStream;
 import jcheckers.common.io.JCheckersIOException;
@@ -32,6 +33,16 @@ public final class DraughtsConnection extends BoardsConnection {
 	@Override
 	protected User createUser() {
 		return new DraughtsUser();
+	}
+
+	@Override
+	protected UserStats createUserStats(String name, int id) {
+		return new DraughtsUserStats(name, id);
+	}
+
+	@Override
+	protected UserStats createUserStats(String name, int id, JCheckersDataInputStream in) throws JCheckersIOException {
+		return new DraughtsUserStats(name, id, in);
 	}
 
 }

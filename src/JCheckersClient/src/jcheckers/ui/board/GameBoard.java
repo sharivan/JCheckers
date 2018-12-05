@@ -290,7 +290,7 @@ public class GameBoard extends JPanel {
 
 			@Override
 			public void onStart() {
-				
+
 			}
 
 			@Override
@@ -524,6 +524,10 @@ public class GameBoard extends JPanel {
 		return locked;
 	}
 
+	public boolean isRotated() {
+		return rotated;
+	}
+
 	public boolean isShowPossibleMoves() {
 		return showPossibleMoves;
 	}
@@ -714,6 +718,11 @@ public class GameBoard extends JPanel {
 		repaint();
 	}
 
+	public void setRotated(boolean value) {
+		rotated = value;
+		repaint();
+	}
+
 	public void setShowPossibleMoves(boolean showPossibleMoves) {
 		this.showPossibleMoves = showPossibleMoves;
 	}
@@ -724,15 +733,6 @@ public class GameBoard extends JPanel {
 
 	private BoardPosition translatePosition(int row, int col) {
 		return new BoardPosition(rotated ? row : getRowCount() - row - 1, rotated ? getColCount() - col - 1 : col);
-	}
-	
-	public boolean isRotated() {
-		return rotated;
-	}
-	
-	public void setRotated(boolean value) {
-		rotated = value;
-		repaint();
 	}
 
 }

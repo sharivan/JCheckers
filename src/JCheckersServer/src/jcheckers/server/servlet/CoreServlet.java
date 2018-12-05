@@ -44,6 +44,7 @@ public class CoreServlet extends HttpServlet {
 		if (core == null) {
 			out.key("response").value("fail");
 			out.key("message").value("Core is offline.");
+			out.endObject();
 			return;
 		}
 
@@ -51,6 +52,7 @@ public class CoreServlet extends HttpServlet {
 		if (action == null) {
 			out.key("response").value("fail");
 			out.key("message").value("Missing action.");
+			out.endObject();
 			return;
 		}
 
@@ -66,7 +68,7 @@ public class CoreServlet extends HttpServlet {
 					if (server == null) {
 						out.key("response").value("fail");
 						out.key("message").value("Server doesn't exist or is offline.");
-						return;
+						break;
 					}
 
 					String[] errorMessage = new String[1];
@@ -89,7 +91,7 @@ public class CoreServlet extends HttpServlet {
 					if (server == null) {
 						out.key("response").value("fail");
 						out.key("message").value("Server doesn't exist or is offline.");
-						return;
+						break;
 					}
 
 					String[] sid = new String[1];
@@ -132,7 +134,7 @@ public class CoreServlet extends HttpServlet {
 					if (server == null) {
 						out.key("response").value("fail");
 						out.key("message").value("Server doesn't exist or is offline.");
-						return;
+						break;
 					}
 
 					server.logout(game, username, sid);

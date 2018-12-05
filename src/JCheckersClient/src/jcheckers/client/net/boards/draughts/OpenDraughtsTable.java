@@ -59,7 +59,7 @@ public final class OpenDraughtsTable extends OpenBoardsTable {
 					output.writeInt(-1);
 					output.writeInt(-1);
 				}
-				
+
 				BoardPosition dst = move.get(posIndex);
 				output.writeInt(src.getCol());
 				output.writeInt(src.getRow());
@@ -68,7 +68,7 @@ public final class OpenDraughtsTable extends OpenBoardsTable {
 				src = dst;
 			}
 		}
-		
+
 		output.flush();
 	}
 

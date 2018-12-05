@@ -41,6 +41,7 @@ import jcheckers.client.net.RoomConnectionListener;
 import jcheckers.client.net.RoomInfo;
 import jcheckers.client.net.Table;
 import jcheckers.client.net.User;
+import jcheckers.client.net.UserStats;
 import jcheckers.client.net.boards.draughts.DraughtsConnection;
 import jcheckers.client.net.boards.draughts.DraughtsRoom;
 import jcheckers.client.net.boards.draughts.DraughtsTableParams;
@@ -69,6 +70,11 @@ public class MainFrame extends JFrame {
 		}
 
 		@Override
+		public void onBanned(Connection c, String bannedUntil) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Você foi banido desta sala até " + bannedUntil));
+		}
+
+		@Override
 		public void onChat(Connection c, String sender, String message) {
 			EventQueue.invokeLater(() -> handleChat(sender, message));
 		}
@@ -79,8 +85,29 @@ public class MainFrame extends JFrame {
 		}
 
 		@Override
+		public void onCouldNotConnectToTheRoom(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Não foi possível se conectar à sala."));
+		}
+
+		@Override
 		public void onError(Connection c, Throwable e) {
 			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Erro: " + e.getMessage()));
+		}
+
+		@Override
+		public void onInvalidPassword(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Senha incorreta."));
+		}
+
+		@Override
+		public void onInvalidRoom(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Sala inválida."));
+		}
+
+		@Override
+		public void onInvited(Connection c, int tableID, int tableNumber, UserStats inviterStats) {
+			// TODO Auto-generated method stub
+
 		}
 
 		@Override
@@ -109,6 +136,17 @@ public class MainFrame extends JFrame {
 		}
 
 		@Override
+		public void onPlayerNotFoundInServer(Connection c, String name) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Usuário " + name + " não foi encontrado no servidor."));
+		}
+
+		@Override
+		public void onPong(Connection c, int src, int dst) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
 		public void onPrivateChat(Connection c, String sender, String message) {
 			EventQueue.invokeLater(() -> handlePrivateChat(sender, message));
 		}
@@ -119,13 +157,45 @@ public class MainFrame extends JFrame {
 		}
 
 		@Override
+		public void onResponseInfo(Connection c, UserStats stats, int[] tables, int inactiveTime) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onRoomChanged(Connection c, int roomIndex) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onServerShuttingDown(Connection c) {
+			EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(new JFrame(), "Servidor está sendo desligado."));
+		}
+
+		@Override
+		public void onServerVersion(Connection c, String version, String lastRelease) {
+			EventQueue.invokeLater(() -> pnlChat.appendSystemMessage("Server - Version: " + version + " - Last Release: " + lastRelease));
+		}
+
+		@Override
 		public void onUpdateTable(Connection c, Table table) {
 			EventQueue.invokeLater(() -> tableList.updateEntry(table));
 		}
 
 		@Override
+		public void onUpdateUsers(Connection c, User[] users) {
+			EventQueue.invokeLater(() -> userList.updateEntries(users));
+		}
+
+		@Override
 		public void onUserList(Connection connection, User[] users) {
 			EventQueue.invokeLater(() -> userList.addEntries(users));
+		}
+
+		@Override
+		public void onWelcome(Connection c, String roomName) {
+			EventQueue.invokeLater(() -> handleWelcome(roomName));
 		}
 
 	}
@@ -134,7 +204,7 @@ public class MainFrame extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -670140197532946365L;
-	
+
 	private static final String DEFAULT_SERVER_URL = "http://localhost:8080/JCheckersServer/CoreServlet";
 
 	/**
@@ -184,37 +254,17 @@ public class MainFrame extends JFrame {
 	private JPanel pnlCreateTable;
 	private TableParamsPanel pnlTableParams;
 	private JButton btnCreateTable;
-	
+
 	public MainFrame() throws ParserConfigurationException, SAXException, IOException {
 		this(null);
-	}
-	
-	private void parseClientConfigs(Config config) throws MalformedURLException {
-		Tree.Node<ConfigEntry> root = config.getChild(0);
-		ConfigEntry entry = root.getValue();
-		if (!entry.getName().equalsIgnoreCase("config"))
-			return;
-
-		for (int i = 0; i < root.getChildCount(); i++) {
-			Tree.Node<ConfigEntry> child = root.getChild(i);
-			entry = child.getValue();
-			if (!(entry instanceof MapConfigEntry))
-				continue;
-
-			String name = entry.getName();
-			Map<String, String> attrs = ((MapConfigEntry) entry).map();
-			if (name.equals("client")) {
-				String urlStr = attrs.getOrDefault("url", DEFAULT_SERVER_URL);
-				url = new URL(urlStr);
-			}
-		}
 	}
 
 	/**
 	 * Create the frame.
-	 * @throws IOException 
-	 * @throws SAXException 
-	 * @throws ParserConfigurationException 
+	 * 
+	 * @throws IOException
+	 * @throws SAXException
+	 * @throws ParserConfigurationException
 	 */
 	public MainFrame(URL url) throws ParserConfigurationException, SAXException, IOException {
 		if (url == null) {
@@ -222,7 +272,7 @@ public class MainFrame extends JFrame {
 			parseClientConfigs(config);
 		} else
 			this.url = url;
-		
+
 		setTitle("JCheckers");
 		queue = new ProcessQueue();
 
@@ -261,7 +311,7 @@ public class MainFrame extends JFrame {
 		GridBagLayout gbl_pnlStart = new GridBagLayout();
 		gbl_pnlStart.columnWidths = new int[] { 247, 0 };
 		gbl_pnlStart.rowHeights = new int[] { 0, 0, 0, 0, 0 };
-		gbl_pnlStart.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_pnlStart.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gbl_pnlStart.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		pnlStart.setLayout(gbl_pnlStart);
 		pnlRight.addTab("Início", null, pnlStart, null);
@@ -393,6 +443,11 @@ public class MainFrame extends JFrame {
 		pnlChat.appendPrivateMessage(sender, message);
 	}
 
+	private void handleWelcome(String roomName) {
+		setTitle("JCheckers - Sala " + roomName);
+		pnlChat.appendSystemMessage("Bem vindo à sala " + roomName);
+	}
+
 	private void joinLobby(int id) {
 		pnlCenter.remove(roomList);
 		pnlCenter.add(pnlLobbyContent, BorderLayout.CENTER);
@@ -464,6 +519,27 @@ public class MainFrame extends JFrame {
 
 		dispose();
 		System.exit(0);
+	}
+
+	private void parseClientConfigs(Config config) throws MalformedURLException {
+		Tree.Node<ConfigEntry> root = config.getChild(0);
+		ConfigEntry entry = root.getValue();
+		if (!entry.getName().equalsIgnoreCase("config"))
+			return;
+
+		for (int i = 0; i < root.getChildCount(); i++) {
+			Tree.Node<ConfigEntry> child = root.getChild(i);
+			entry = child.getValue();
+			if (!(entry instanceof MapConfigEntry))
+				continue;
+
+			String name = entry.getName();
+			Map<String, String> attrs = ((MapConfigEntry) entry).map();
+			if (name.equals("client")) {
+				String urlStr = attrs.getOrDefault("url", DEFAULT_SERVER_URL);
+				url = new URL(urlStr);
+			}
+		}
 	}
 
 	private void register(String username, String password, String email) {

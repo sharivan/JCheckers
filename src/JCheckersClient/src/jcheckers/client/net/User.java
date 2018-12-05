@@ -1,9 +1,14 @@
 package jcheckers.client.net;
 
+import jcheckers.common.io.JCheckersDataInputStream;
+import jcheckers.common.io.JCheckersIOException;
+
 public class User {
 
 	int id;
 	String name;
+	int tableCount;
+	int bomb;
 
 	protected User() {
 
@@ -27,12 +32,20 @@ public class User {
 		return true;
 	}
 
+	public int getBomb() {
+		return bomb;
+	}
+
 	public int getID() {
 		return id;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public int getTableCount() {
+		return tableCount;
 	}
 
 	@Override
@@ -45,6 +58,10 @@ public class User {
 
 	public boolean nameEquals(User user) {
 		return name.equalsIgnoreCase(user.getName());
+	}
+
+	protected void readExtraInfo(JCheckersDataInputStream in) throws JCheckersIOException {
+
 	}
 
 	@Override

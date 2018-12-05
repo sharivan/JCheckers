@@ -186,6 +186,10 @@ public abstract class Connection {
 
 	protected abstract User createUser();
 
+	protected abstract UserStats createUserStats(String name, int id);
+
+	protected abstract UserStats createUserStats(String name, int id, JCheckersDataInputStream in) throws JCheckersIOException;
+
 	public Base getBase() {
 		return base;
 	}

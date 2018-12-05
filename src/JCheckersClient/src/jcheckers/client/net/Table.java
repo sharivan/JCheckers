@@ -120,6 +120,21 @@ public abstract class Table {
 		return BitUtil.bitCount(seatBits);
 	}
 
+	public User getUserByID(int id) {
+		for (Seat seat : seats)
+			if (seat != null) {
+				User user = seat.getUser();
+				if (seat.getUser().getID() == id)
+					return user;
+			}
+
+		for (User user : watchers)
+			if (user.getID() == id)
+				return user;
+
+		return null;
+	}
+
 	public User getWatcher(int index) {
 		return watchers[index];
 	}
@@ -161,6 +176,8 @@ public abstract class Table {
 	protected void readUser(User user, JCheckersDataInputStream in) throws JCheckersIOException {
 		user.name = in.readString();
 		user.id = in.readInt();
+
+		user.readExtraInfo(in);
 	}
 
 }

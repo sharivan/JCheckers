@@ -78,11 +78,44 @@ public abstract class Base {
 
 	protected void parseData(int opcode, JCheckersDataInputStream in) throws IOException {
 		switch (opcode) {
-			case InputProtocol.PING:
-				break;
+			case InputProtocol.WELLCOME: {
+				String roomName = in.readString();
 
-			case InputProtocol.PONG:
+				for (ConnectionListener listener : listeners)
+					if (listener != null)
+						try {
+							listener.onWelcome(connection, roomName);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
 				break;
+			}
+
+			case InputProtocol.PING: {
+				int src = in.readInt();
+				int dst = in.readInt();
+
+				JCheckersDataOutputStream out = connection.prepareOutput();
+				OutputProtocol protocol = connection.createOutputProtocol(out);
+				protocol.pong(src, dst);
+				break;
+			}
+
+			case InputProtocol.PONG: {
+				int src = in.readInt();
+				int dst = in.readInt();
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null)
+						try {
+							listener.onPong(connection, src, dst);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
 
 			case InputProtocol.MY_ID: {
 				int myID = in.readInt();
@@ -96,10 +129,8 @@ public abstract class Base {
 			case InputProtocol.JOIN_USER: {
 				User user = connection.createUser();
 				readUser(user, in);
-				@SuppressWarnings("unused")
-				int tableCount = in.readChar();
-				@SuppressWarnings("unused")
-				int bomb = in.readChar();
+				user.tableCount = in.readChar();
+				user.bomb = in.readChar();
 
 				users.add(user);
 				usersHash.put(user.getID(), user);
@@ -140,10 +171,8 @@ public abstract class Base {
 				for (int i = 0; i < count; i++) {
 					User user = connection.createUser();
 					readUser(user, in);
-					@SuppressWarnings("unused")
-					int tableCount = in.readChar();
-					@SuppressWarnings("unused")
-					int bomb = in.readChar();
+					user.tableCount = in.readUChar();
+					user.bomb = in.readUChar();
 
 					this.users.add(user);
 					usersHash.put(user.getID(), user);
@@ -162,8 +191,17 @@ public abstract class Base {
 				break;
 			}
 
-			case InputProtocol.INVALID_ROOM:
+			case InputProtocol.INVALID_ROOM: {
+				for (ConnectionListener listener : listeners)
+					if (listener != null)
+						try {
+							listener.onInvalidRoom(connection);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
 				break;
+			}
 
 			case InputProtocol.RESPONSE_CHAT: {
 				String sender = in.readEasyString();
@@ -210,44 +248,157 @@ public abstract class Base {
 				break;
 			}
 
-			case InputProtocol.NOTIFY_BANNED_AND_DISCONNECT:
-				break;
+			case InputProtocol.NOTIFY_BANNED_AND_DISCONNECT: {
+				String bannedUntil = in.readString();
 
-			case InputProtocol.NOTIFY_BANNED_ONLY:
-				break;
+				for (ConnectionListener listener : listeners)
+					if (listener != null)
+						try {
+							listener.onBanned(connection, bannedUntil);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
 
-			case InputProtocol.RESPONSE_SERVER_VERSION:
+				connection.close(true);
 				break;
+			}
 
-			case InputProtocol.ACCOUNT_BLOCKED:
-				break;
+			case InputProtocol.NOTIFY_BANNED_ONLY: {
+				String bannedUntil = in.readString();
 
-			case InputProtocol.SERVER_SHUTTING_DOWN:
-				break;
+				for (ConnectionListener listener : listeners)
+					if (listener != null)
+						try {
+							listener.onBanned(connection, bannedUntil);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
 
-			case InputProtocol.INVALID_PASSWORD:
 				break;
+			}
 
-			case InputProtocol.RESPONSE_INFO:
-				break;
+			case InputProtocol.RESPONSE_SERVER_VERSION: {
+				String version = in.readString();
+				String lastRelease = in.readString();
 
-			case InputProtocol.PLAYER_NOT_FOUND_IN_SERVER:
-				break;
+				for (ConnectionListener listener : listeners)
+					if (listener != null)
+						try {
+							listener.onServerVersion(connection, version, lastRelease);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
 
-			case InputProtocol.UPDATE_USERS:
 				break;
+			}
 
-			case InputProtocol.YOU_WAS_KICKED_BY_ADMIN:
+			case InputProtocol.ACCOUNT_BLOCKED: {
 				break;
+			}
 
-			case InputProtocol.OTHER_WAS_KICKED_BY_ADMIN:
+			case InputProtocol.SERVER_SHUTTING_DOWN: {
+				for (ConnectionListener listener : listeners)
+					if (listener != null)
+						try {
+							listener.onServerShuttingDown(connection);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
 				break;
+			}
+
+			case InputProtocol.INVALID_PASSWORD: {
+				for (ConnectionListener listener : listeners)
+					if (listener != null)
+						try {
+							listener.onInvalidPassword(connection);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case InputProtocol.RESPONSE_INFO: {
+				String name = in.readString();
+				int id = in.readInt();
+				in.readInt();
+
+				UserStats stats = connection.createUserStats(name, id, in);
+				in.readUChar();
+
+				int tableCount = in.readUChar();
+				int[] tables = new int[tableCount];
+				for (int i = 0; i < tableCount; i++)
+					tables[i] = in.readUChar();
+
+				int inactiveTime = in.readInt();
+				in.readInt();
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null)
+						try {
+							listener.onResponseInfo(connection, stats, tables, inactiveTime);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case InputProtocol.PLAYER_NOT_FOUND_IN_SERVER: {
+				String name = in.readString();
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null)
+						try {
+							listener.onPlayerNotFoundInServer(connection, name);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case InputProtocol.UPDATE_USERS: {
+				int count = in.readInt();
+				User[] users = new User[count];
+				for (int i = 0; i < count; i++) {
+					User user = connection.createUser();
+					user.id = in.readInt();
+					user.readExtraInfo(in);
+					user.tableCount = in.readUChar();
+					user.bomb = in.readUChar();
+					users[i] = user;
+				}
+
+				for (ConnectionListener listener : listeners)
+					if (listener != null)
+						try {
+							listener.onUpdateUsers(connection, users);
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+
+				break;
+			}
+
+			case InputProtocol.YOU_WAS_KICKED_BY_ADMIN: {
+				break;
+			}
+
+			case InputProtocol.OTHER_WAS_KICKED_BY_ADMIN: {
+				break;
+			}
 		}
 	}
 
 	protected void readUser(User user, JCheckersDataInputStream in) throws JCheckersIOException {
 		user.id = in.readInt();
 		user.name = in.readString();
+
+		user.readExtraInfo(in);
 	}
 
 	public void sendMessageToChat(String message) {

@@ -204,4 +204,19 @@ public class UserListPanel extends JPanel {
 		entries.sort((left, right) -> descending ? -compareByRating(left, right) : compareByRating(left, right));
 	}
 
+	public void updateEntries(User[] users) {
+		for (User user : users)
+			updateEntry((DraughtsUser) user);
+	}
+
+	public void updateEntry(DraughtsUser user) {
+		int index = indexOf(user);
+		if (index == -1)
+			return;
+
+		UserEntryPanel entry = entries.get(index);
+		entry.setName(user.getName());
+		entry.setRating(user.getRating());
+	}
+
 }

@@ -56,7 +56,7 @@ public class TableParamsPanel extends JPanel {
 
 		cmbVariant = new JComboBox<>();
 		cmbVariant.setModel(new DefaultComboBoxModel<>(new String[] { "Cl\u00E1ssica", "Internacional", "Americana", "Americana 10x10" }));
-		cmbVariant.setSelectedIndex(0);
+		cmbVariant.setSelectedIndex(2);
 		cmbVariant.setEditable(true);
 		GridBagConstraints gbc_cmbVariant = new GridBagConstraints();
 		gbc_cmbVariant.gridwidth = 2;
@@ -87,6 +87,7 @@ public class TableParamsPanel extends JPanel {
 		add(cmbTablePrivacy, gbc_cmbTablePrivacy);
 
 		chkRated = new JCheckBox("Pontua\u00E7\u00E3o ativa");
+		chkRated.setSelected(true);
 		GridBagConstraints gbc_chkRated = new GridBagConstraints();
 		gbc_chkRated.insets = new Insets(0, 0, 5, 0);
 		gbc_chkRated.anchor = GridBagConstraints.WEST;
