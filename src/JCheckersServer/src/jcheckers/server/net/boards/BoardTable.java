@@ -305,7 +305,11 @@ public abstract class BoardTable extends Table {
 
 			int currentTurn = game.getCurrentTurn();
 
-			output.writeUChar(BoardOutputProtocol.DRAUGHTS_AND_CHESS_GAME_STATE);
+			OutputProtocol protocol = user.prepareProtocol();
+			if (protocol == null)
+				return;
+			
+			output.writeUChar(protocol.getOpcode(BoardOutputProtocol.DRAUGHTS_AND_CHESS_GAME_STATE));
 			output.writeChar(getGameID()); // game id
 			output.writeChar(getGameType()); // game type (0=classic
 												// 1=international 2=american

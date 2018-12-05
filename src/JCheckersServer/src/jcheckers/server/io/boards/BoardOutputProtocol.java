@@ -142,59 +142,59 @@ public class BoardOutputProtocol extends OutputProtocol {
 	}
 
 	public void gamePaused() {
-		output.writeUChar(GAME_PAUSED);
+		output.writeUChar(getOpcode(GAME_PAUSED));
 		output.flush();
 	}
 
 	public void hideControls() {
-		output.writeUChar(HIDE_CONTROLS);
+		output.writeUChar(getOpcode(HIDE_CONTROLS));
 		output.flush();
 	}
 
 	public void notifyPlayerAcceptedDraw(String name, int id) {
-		output.writeUChar(PLAYER_ACCEPTED_DRAW);
+		output.writeUChar(getOpcode(PLAYER_ACCEPTED_DRAW));
 		output.writeString(name);
 		output.writeInt(id);
 		output.flush();
 	}
 
 	public void notifyPlayerAcceptedUndoMove(String name, int id) {
-		output.writeUChar(PLAYER_ACCEPTED_UNDO_MOVE);
+		output.writeUChar(getOpcode(PLAYER_ACCEPTED_UNDO_MOVE));
 		output.writeString(name);
 		output.writeInt(id);
 		output.flush();
 	}
 
 	public void notifyPlayerOfferedDraw(String name, int id) {
-		output.writeUChar(PLAYER_OFFERED_DRAW);
+		output.writeUChar(getOpcode(PLAYER_OFFERED_DRAW));
 		output.writeString(name);
 		output.writeInt(id);
 		output.flush();
 	}
 
 	public void notifyPlayerRejectedDraw(String name, int id) {
-		output.writeUChar(PLAYER_REJECTED_DRAW);
+		output.writeUChar(getOpcode(PLAYER_REJECTED_DRAW));
 		output.writeString(name);
 		output.writeInt(id);
 		output.flush();
 	}
 
 	public void notifyPlayerRejectedPauseGame(String name, int id) {
-		output.writeUChar(PLAYER_REJECTED_PAUSE_GAME);
+		output.writeUChar(getOpcode(PLAYER_REJECTED_PAUSE_GAME));
 		output.writeString(name);
 		output.writeInt(id);
 		output.flush();
 	}
 
 	public void notifyPlayerRejectedUndoMove(String name, int id) {
-		output.writeUChar(PLAYER_REJECTED_UNDO_MOVE);
+		output.writeUChar(getOpcode(PLAYER_REJECTED_UNDO_MOVE));
 		output.writeString(name);
 		output.writeInt(id);
 		output.flush();
 	}
 
 	public void notifyPlayerSuggestedPauseGame(String name, int id, int time) {
-		output.writeUChar(PLAYER_SUGGESTED_PAUSE_GAME);
+		output.writeUChar(getOpcode(PLAYER_SUGGESTED_PAUSE_GAME));
 		output.writeString(name);
 		output.writeInt(id);
 		output.writeInt(time);
@@ -202,14 +202,14 @@ public class BoardOutputProtocol extends OutputProtocol {
 	}
 
 	public void notifyPlayerSuggestedUndoLastMove(String name, int id) {
-		output.writeUChar(PLAYER_SUGGESTED_UNDO_MOVE);
+		output.writeUChar(getOpcode(PLAYER_SUGGESTED_UNDO_MOVE));
 		output.writeString(name);
 		output.writeInt(id);
 		output.flush();
 	}
 
 	public void notifyRatingChange(int[] sitIndexes, String[] names, int[] gains, int[] ratings) {
-		output.writeUChar(RATING_CHANGE);
+		output.writeUChar(getOpcode(RATING_CHANGE));
 		output.writeChar(sitIndexes.length);
 		for (int i = 0; i < sitIndexes.length; i++) {
 			output.writeChar(sitIndexes[i]);
@@ -221,12 +221,12 @@ public class BoardOutputProtocol extends OutputProtocol {
 	}
 
 	public void notifyRatingTooHigh() {
-		output.writeUChar(RATING_TOO_HIGH);
+		output.writeUChar(getOpcode(RATING_TOO_HIGH));
 		output.flush();
 	}
 
 	public void notifyWinners(int byte1, int byte2, int byte3, int byte4, int byte5, int byte6, String[] names) {
-		output.writeUChar(WINNERS);
+		output.writeUChar(getOpcode(WINNERS));
 		output.writeChar(byte1);
 		output.writeChar(byte2);
 		output.writeChar(byte3);
