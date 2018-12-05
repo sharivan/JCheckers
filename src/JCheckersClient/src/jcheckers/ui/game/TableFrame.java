@@ -49,12 +49,20 @@ import jcheckers.common.logic.boards.draughts.DraughtsGame;
 import jcheckers.common.logic.boards.draughts.DraughtsGameListener;
 import jcheckers.common.logic.boards.draughts.DraughtsMan;
 import jcheckers.common.logic.boards.draughts.DraughtsPiece;
-import jcheckers.ui.ImageListImpl;
+import jcheckers.ui.ResourceImageList;
 import jcheckers.ui.board.GameBoard;
 import jcheckers.ui.chat.ChatPanel;
 import jcheckers.ui.options.TableParamsPanel;
 import jcheckers.ui.user.UserListPanel;
 
+/**
+ * 
+ * Frame Swing que representa uma mesa aberta.
+ * 
+ * Uma mesa aberta está associada a uma nova conexão com o servidor onde o usuário pode interagir com os usuários presentes nela.
+ * @author miste
+ *
+ */
 public class TableFrame extends JFrame {
 
 	private class DraughtsConnectionHandler implements DraughtsTableConnectionListener {
@@ -476,13 +484,16 @@ public class TableFrame extends JFrame {
 		});
 	}
 
-	private ImageListImpl imgList;
+	private ResourceImageList imgList;
 
 	private DraughtsConnection connection;
 	private OpenDraughtsTable openTable;
 	private DraughtsTable table;
 	private DraughtsGame game;
 
+	/**
+	 * Fila de processos utilizada para processamento em segundo plano.
+	 */
 	private ProcessQueue queue;
 
 	private String host;
@@ -548,7 +559,7 @@ public class TableFrame extends JFrame {
 		this.username = username;
 		this.sid = sid;
 
-		imgList = new ImageListImpl("images");
+		imgList = new ResourceImageList("images");
 		imgList.init();
 
 		queue = new ProcessQueue();

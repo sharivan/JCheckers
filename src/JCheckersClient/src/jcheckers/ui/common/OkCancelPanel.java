@@ -8,6 +8,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+/**
+ * 
+ * Painel Swing contendo os botões de OK e Cancelar.
+ * @author miste
+ *
+ */
 public class OkCancelPanel extends JPanel {
 
 	/**

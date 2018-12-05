@@ -12,6 +12,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+/**
+ * 
+ * Painel que implementa uma entrada de uma lista de mesas da sala.
+ * @author miste
+ *
+ */
 public class TableEntryPanel extends JPanel {
 
 	/**

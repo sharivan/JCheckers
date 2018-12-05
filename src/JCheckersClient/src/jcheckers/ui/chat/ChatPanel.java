@@ -13,6 +13,20 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+/**
+ * 
+ * Painel Swing utilizado para renderizar o chat.
+ * 
+ * Um painel de chat poderá exibir os seguintes tipos de mensagens:
+ * - Mensagem de um usuário comum (cor branca).
+ * - Mensagem de um administrador (cor laranja).
+ * - Mensagem do sistema (cor laranja).
+ * - Mensagem de alerta (cor vermelha).
+ * 
+ * Um campo de mensagem é situado acima do chat, onde o usuário poderá digitar sua mensagem para ser enviada ao chat. O envio da mensagem ao chat não ocorrerá diretamente, para isso um listener deverá ser adicionado para o processamento do evento de mensagem enviada pelo usuário.
+ * @author miste
+ *
+ */
 public class ChatPanel extends JPanel {
 
 	/**
@@ -59,10 +73,21 @@ public class ChatPanel extends JPanel {
 		doc = txtChat.getStyledDocument();
 	}
 
+	/**
+	 * 
+	 * Adiciona um nov listener.
+	 * @param listener
+	 */
 	public void addListener(ChatPanelListener listener) {
 		listeners.add(listener);
 	}
 
+	/**
+	 * 
+	 * Insere uma mensagem de admin ao chat.
+	 * @param sender Admin que enviou a mensagem
+	 * @param message Mensagem
+	 */
 	public void appendAdminMessage(String sender, String message) {
 		SimpleAttributeSet keyWord = new SimpleAttributeSet();
 		StyleConstants.setForeground(keyWord, ADMIN_MESSAGE_COLOR);
@@ -75,6 +100,11 @@ public class ChatPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * 
+	 * Adiciona uma mensagem de alerta ao chat.
+	 * @param message Mensagem de alerta
+	 */
 	public void appendAlertMessage(String message) {
 		SimpleAttributeSet keyWord = new SimpleAttributeSet();
 		StyleConstants.setForeground(keyWord, ALERT_MESSAGE_COLOR);
@@ -87,6 +117,12 @@ public class ChatPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * 
+	 * Adiciona uma mensagem ao chat.
+	 * @param sender Usuário que enviou a mensagem
+	 * @param message Mensagem
+	 */
 	public void appendMessage(String sender, String message) {
 		SimpleAttributeSet keyWord = new SimpleAttributeSet();
 		StyleConstants.setForeground(keyWord, CHAT_FOREGROUND_COLOR);
@@ -99,6 +135,12 @@ public class ChatPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * 
+	 * Adiciona uma mensagem privada ao chat.
+	 * @param sender Usuário que enviou a mensagem
+	 * @param message Mensagem
+	 */
 	public void appendPrivateMessage(String sender, String message) {
 		SimpleAttributeSet keyWord = new SimpleAttributeSet();
 		StyleConstants.setForeground(keyWord, PRIVATE_MESSAGE_COLOR);
@@ -111,6 +153,11 @@ public class ChatPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * 
+	 * Adiciona uma mensagem de sistema ao chat.
+	 * @param message Mensagem
+	 */
 	public void appendSystemMessage(String message) {
 		SimpleAttributeSet keyWord = new SimpleAttributeSet();
 		StyleConstants.setForeground(keyWord, SYSTEM_MESSAGE_COLOR);
@@ -123,14 +170,24 @@ public class ChatPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Apaga o chat.
+	 */
 	public void clearChat() {
 		txtChat.setText("");
 	}
 
+	/**
+	 * Apaca o campo de mensagem.
+	 */
 	public void clearMessage() {
 		txtMessage.setText("");
 	}
 
+	/**
+	 * 
+	 * @return true se o campo de mensagem será apagado ao ser enviada uma nova mensagem (ao digitar enter), false caso contrário.
+	 */
 	public boolean isClearAfterSend() {
 		return clearAfterSend;
 	}
@@ -149,10 +206,20 @@ public class ChatPanel extends JPanel {
 				}
 	}
 
+	/**
+	 * 
+	 * Remove um listener.
+	 * @param listener
+	 */
 	public void removeListener(ChatPanelListener listener) {
 		listeners.remove(listener);
 	}
 
+	/**
+	 * 
+	 * Altera o comportamento do chat ao enviar uma nova mensagem, se o campo de mensagem será apagado ou não caso o usuário tecle enter após digitar uma mensagem neste campo.
+	 * @param clearAfterSend
+	 */
 	public void setClearAfterSend(boolean clearAfterSend) {
 		this.clearAfterSend = clearAfterSend;
 	}

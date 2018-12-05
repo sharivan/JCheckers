@@ -27,12 +27,26 @@ import jcheckers.common.io.JCheckersInputStream;
 import jcheckers.common.io.JCheckersOutputStream;
 import jcheckers.common.util.CryptUtil;
 
+/**
+ * 
+ * Implementa a conexão com o servidor utilizando sockets TCP/IP.
+ * 
+ * A comunicação com o servidor é feita por meio de streams de dados binários onde cada instrução de requisição ou de resposta sempre conterá um código de operação (opcode) que identifica qual é a instrução a ser processada pelo cliente ou pelo servidor.
+ * @author miste
+ *
+ */
 public abstract class Connection {
 
 	public enum ConnectionMode {
 		CREATE_TABLE, JOIN_TABLE_SITTING, JOIN_TABLE_WATCHING, JOIN_TABLE_RECONNECTING_SITTING, JOIN_TABLE_RECONNECTING_WATCHING, JOIN_LOBBY
 	}
 
+	/**
+	 * 
+	 * Implementação de JCheckersDataOutputStream que permite o envio de dados ao servidor por meio da conexão utilizando a fila de processos de saída, de forma a manter sincronia entre todas as mensagens enviadas.
+	 * @author miste
+	 *
+	 */
 	private class ConnectionOutputStream extends JCheckersDataOutputStream {
 
 		private ByteArrayOutputStream out;
@@ -67,18 +81,51 @@ public abstract class Connection {
 	private static final boolean DEBUG_INPUT = true;
 	private static final boolean DEBUG_OUTPUT = true;
 
+	/**
+	 * Host do servidor.
+	 */
 	private String host;
+	
+	/**
+	 * Porta do servidor.
+	 */
 	private int port;
+	
+	/**
+	 * Nome de usuário (login/nickname).
+	 */
 	private String username;
+	
+	/**
+	 * ID da sessão.
+	 */
 	private String sid;
+	
+	/**
+	 * ID da sala.
+	 */
 	private int roomID;
+	
+	/**
+	 * ID da mesa, caso a conexão seja com uma nova mesa ou com uma mesa existente.
+	 */
 	private int tableID = -1;
+	
+	/**
+	 * Posição do lugar em que o usuário irá sentar, caso a conexão seja com uma mesa.
+	 */
 	private int sitIndex = -1;
+	
+	/**
+	 * Parâmetros da mesa, caso a conexão seja com uma nova a mesa a ser criada pelo próprio usuário.
+	 */
 	private TableParams params;
 
 	private String pcName = "";
 	private int compid = -1;
 
+	// Objetos de conexão e de entrada/saída.
+	
 	private Socket socket;
 	private JCheckersInputStream in;
 	private JCheckersOutputStream out;

@@ -44,6 +44,7 @@ import common.util.Tree;
 import jcheckers.common.io.JCheckersDataInputStream;
 import jcheckers.common.io.JCheckersDataOutputStream;
 import jcheckers.common.logic.Game.StopReason;
+import jcheckers.server.io.DuplicateOpcodeException;
 import jcheckers.server.io.InputProtocol;
 import jcheckers.server.io.OutputProtocol;
 
@@ -1387,7 +1388,12 @@ public abstract class Server implements Interruptable {
 		}
 	}
 
-	public void open(String homeDir, Config config) throws IOException, SQLException, InterruptedException, ClassNotFoundException {
+	public void open(String homeDir, Config config) throws IOException, SQLException, InterruptedException, ClassNotFoundException, DuplicateOpcodeException {
+		InputProtocol inputProtocol = createInputProtocol(null);
+		inputProtocol.check();
+		OutputProtocol outputProtocol = createOutputProtocol(null);
+		outputProtocol.check();
+		
 		if (closer != null && closer.isOpen())
 			return;
 

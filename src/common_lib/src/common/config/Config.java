@@ -33,9 +33,9 @@ public class Config extends Tree<ConfigEntry> {
 				String value = child.getNodeValue();
 				if (value != null)
 					map.put("value", value);
-				node1 = new Tree.Node<ConfigEntry>(new MapConfigEntry(child.getNodeName(), map));
+				node1 = new Tree.Node<>(new MapConfigEntry(child.getNodeName(), map));
 			} else
-				node1 = new Tree.Node<ConfigEntry>(new SimpleConfigEntry(child.getNodeName(), child.getNodeValue()));
+				node1 = new Tree.Node<>(new SimpleConfigEntry(child.getNodeName(), child.getNodeValue()));
 			node.addChild(node1);
 			NodeList childs1 = child.getChildNodes();
 			loadTree(childs1, node1);

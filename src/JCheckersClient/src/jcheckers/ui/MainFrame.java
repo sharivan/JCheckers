@@ -60,8 +60,21 @@ import jcheckers.ui.register.RegisterFrame;
 import jcheckers.ui.register.RegisterListener;
 import jcheckers.ui.user.UserListPanel;
 
+/**
+ * 
+ * Frame principal do client-side.
+ * Aqui estão implementadas as interfaces com a sala de jogos, assim como as opções de login e registro.
+ * @author Sharivan
+ *
+ */
 public class MainFrame extends JFrame {
 
+	/**
+	 * 
+	 * Implementação do listener para receber os eventos enviados pelo servidor e processa-los.
+	 * @author miste
+	 *
+	 */
 	private class DraughtsConnectionHandler implements RoomConnectionListener {
 
 		@Override
@@ -189,7 +202,7 @@ public class MainFrame extends JFrame {
 		}
 
 		@Override
-		public void onUserList(Connection connection, User[] users) {
+		public void onUserList(Connection c, User[] users) {
 			EventQueue.invokeLater(() -> userList.addEntries(users));
 		}
 
@@ -222,46 +235,169 @@ public class MainFrame extends JFrame {
 	}
 
 	private ImageList imgList;
+	
+	/**
+	 * Fila de processos utilizada para as operações em segundo plano.
+	 */
 	private ProcessQueue queue;
 
+	/**
+	 * URL do servidor.
+	 */
 	private URL url;
+	
+	/**
+	 * Objeto de conexão utilizada para realizar o login e o registro.
+	 */
 	private CoreConnection core;
 
+	/**
+	 * Host do servidor.
+	 */
 	private String host;
+	
+	/**
+	 * Pora do Servidor.
+	 */
 	private int port;
+	
+	/**
+	 * Nome do usuário (login/nickname).
+	 */
 	private String username;
+	
+	/**
+	 * ID da sessão.
+	 */
 	private String sid;
+	
+	/**
+	 * Objeto de conexão com o servidor (sala de jogos).
+	 */
 	private DraughtsConnection connection;
+	
+	/**
+	 * Objeto associado a sala de jogos.
+	 */
 	private DraughtsRoom room;
+	
+	/**
+	 * Parâmetros utilizados para a criação de uma nova mesa.
+	 */
 	private DraughtsTableParams params;
 
+	
+	// Objetos gráficos (componentes Swing).
+	
+	/**
+	 *  Painel global.
+	 */
 	private JPanel contentPane;
+	
+	/**
+	 *  Lista de salas.
+	 */
 	private RoomListPanel roomList;
-	private JPanel pnlLobbyContent;
-	private TableListPanel tableList;
-	private UserListPanel userList;
-	private ChatPanel pnlChat;
-	private JPanel pnlCenter;
-	private JButton btnLogin;
-	private JButton btnRegister;
-	private JPanel pnlUsersContent;
-	private JTabbedPane pnlRight;
-	private JPanel pnlStart;
-	private JPanel pnlRoom;
-	private JButton btnOptions;
-	private JButton btnExit;
-	private JLabel lblStatusBar;
-	private JPanel pnlCreateTable;
-	private TableParamsPanel pnlTableParams;
-	private JButton btnCreateTable;
+	
+	/**
+	 *  Painel relacionado ao conteúdo da sala, contendo o chat e a lista de mesas.
+	 */
+	private JPanel pnlLobbyContent; 
+	
+	/**
+	 *  Lista de messas na sala.
+	 */
+	private TableListPanel tableList; 
+	
+	/**
+	 *  Lista de usuários na sala.
+	 */
+	private UserListPanel userList; 
+	
+	/**
+	 *  Chat da sala.
+	 */
+	private ChatPanel pnlChat; 
+	
+	/**
+	 *  Painel central, onde estará localizado a lista de salas e o painel de conteúdo da sala.
+	 */
+	private JPanel pnlCenter; 
+	
+	/**
+	 *  Botão de login.
+	 */
+	private JButton btnLogin; 
+	
+	/**
+	 *  Botão de registro.
+	 */
+	private JButton btnRegister; 
+	
+	/**
+	 *  Painel onde estará localizado a lista de usuários.
+	 */
+	private JPanel pnlUsersContent; 
+	
+	/**
+	 *  Painel direito, contendo todas as funções (botões) e visualização da lista de usuários.
+	 */
+	private JTabbedPane pnlRight; 
+	
+	/**
+	 *  Painel inicial, onde estarão os botões de login, de registro e de fechar o programa.
+	 */
+	private JPanel pnlStart; 
+	
+	/**
+	 *  Painel da sala.
+	 */
+	private JPanel pnlRoom; 
+	
+	/**
+	 *  Não utilizado.
+	 */
+	private JButton btnOptions; 
+	
+	/**
+	 *  Botão de encerramento do programa.
+	 */
+	private JButton btnExit; 
+	
+	/**
+	 *  Barra de status.
+	 */
+	private JLabel lblStatusBar; 
+	
+	/**
+	 *  Painel de criação de mesas.
+	 */
+	private JPanel pnlCreateTable; 
+	
+	/**
+	 *  Painel dos parâmetros da mesa.
+	 */
+	private TableParamsPanel pnlTableParams; 
+	
+	/**
+	 *  Botão de criar uma nova mesa.
+	 */
+	private JButton btnCreateTable; 
 
+	/**
+	 * 
+	 * Cria o frame principal utilizando a configuração contida no arquivo config.xml.
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
 	public MainFrame() throws ParserConfigurationException, SAXException, IOException {
 		this(null);
 	}
 
 	/**
-	 * Create the frame.
 	 * 
+	 * Cria o frame principal utilizando a URL passada como parâmetro para a conexão com o servidor de login/registro.
 	 * @throws IOException
 	 * @throws SAXException
 	 * @throws ParserConfigurationException
@@ -269,14 +405,14 @@ public class MainFrame extends JFrame {
 	public MainFrame(URL url) throws ParserConfigurationException, SAXException, IOException {
 		if (url == null) {
 			Config config = Config.parseConfig(new File("config.xml"));
-			parseClientConfigs(config);
+			parseClientConfigs(config); // Realiza o parsing do arquivo de configuração config.xml a fim de extrair a URL utilizada para acessar o servidor de login/registro.
 		} else
 			this.url = url;
 
 		setTitle("JCheckers");
 		queue = new ProcessQueue();
 
-		imgList = new ImageListImpl("images");
+		imgList = new ResourceImageList("images");
 		imgList.init();
 
 		core = new CoreConnection(this.url);
@@ -284,6 +420,7 @@ public class MainFrame extends JFrame {
 		params = new DraughtsTableParams();
 		params.setGameType(DraughtsTableParams.AMERICAN);
 
+		// Por padrao, o host é configurado como localhost, mas após a realização do login ele receberá do servidor o seu valor real. O mesmo vale para a porta.
 		host = "localhost";
 		port = 5085;
 
@@ -293,6 +430,8 @@ public class MainFrame extends JFrame {
 				onExit();
 			}
 		});
+		
+		// Criação dos componentes Swing.
 
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 900, 600);

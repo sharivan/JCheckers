@@ -11,6 +11,12 @@ import javax.swing.JScrollPane;
 
 import jcheckers.client.net.Table;
 
+/**
+ * 
+ * Painel que implementa uma lista de mesas de uma sala.
+ * @author miste
+ *
+ */
 public class TableListPanel extends JPanel {
 
 	/**

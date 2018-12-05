@@ -10,18 +10,44 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+/**
+ * 
+ * Implementa a conexão com o servlet de login e registro.
+ * @author miste
+ *
+ */
 public class CoreConnection {
 
+	/**
+	 * URL do servlet.
+	 */
 	private URL url;
 
 	public CoreConnection(URL url) {
 		this.url = url;
 	}
 
+	/**
+	 * 
+	 * @return URL do servlet de login e registro.
+	 */
 	public URL getURL() {
 		return url;
 	}
 
+	/**
+	 * 
+	 * Efetua o login com o servlet.
+	 * @param game Nome do jogo
+	 * @param username Usuário
+	 * @param password Senha
+	 * @param sid ID da sessão (retorno)
+	 * @param host Host do servidor (retorno)
+	 * @param port Porta do servidor (retorno)
+	 * @param rooms Lista de salas do servidor (retorno)
+	 * @return 0 se o login for bem sucedido, 1 se o usuário ou senha estiverem incorretos.
+	 * @throws IOException Se um problema na conexão ocorrer.
+	 */
 	public int login(String game, String username, String password, String[] sid, String[] host, int[] port, List<RoomInfo> rooms) throws IOException {
 		HttpURLConnection connection = null;
 		PrintStream ps = null;
@@ -82,6 +108,21 @@ public class CoreConnection {
 		}
 	}
 
+	/**
+	 * 
+	 * Efetua um registro de um novo usuário no servlet.
+	 * @param game Nome do jogo
+	 * @param username Usuário
+	 * @param password Senha
+	 * @param email e-mail de contato
+	 * @return
+	 * 	0 se o registro foi realizado com sucesso<br>
+	 * 	1 se o nome de usuário for inválido<br>
+	 * 	2 se a senha for inválida<br>
+	 * 	3 se o e-mail for inválido<br>
+	 * 	4 se o nome de usuário já for cadastrado no servidor
+	 * @throws IOException Se um problema na conexão ocorrer.
+	 */
 	public int register(String game, String username, String password, String email) throws IOException {
 		HttpURLConnection connection = null;
 		PrintStream ps = null;
@@ -122,6 +163,11 @@ public class CoreConnection {
 		}
 	}
 
+	/**
+	 * 
+	 * Altera a URL para a conexão com o servlet de login e registro.
+	 * @param url
+	 */
 	public void setURL(URL url) {
 		this.url = url;
 	}

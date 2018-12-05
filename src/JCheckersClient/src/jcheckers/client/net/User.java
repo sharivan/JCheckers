@@ -3,6 +3,12 @@ package jcheckers.client.net;
 import jcheckers.common.io.JCheckersDataInputStream;
 import jcheckers.common.io.JCheckersIOException;
 
+/**
+ * 
+ * Representa um usuário conectado a uma sala ou a uma mesa.
+ * @author miste
+ *
+ */
 public class User {
 
 	int id;

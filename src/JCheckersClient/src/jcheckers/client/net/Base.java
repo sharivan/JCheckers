@@ -12,6 +12,12 @@ import jcheckers.common.io.JCheckersDataInputStream;
 import jcheckers.common.io.JCheckersDataOutputStream;
 import jcheckers.common.io.JCheckersIOException;
 
+/**
+ * 
+ * Implementa a conexão com um objeto genérico do servidor que pode ser ou uma sala ou uma mesa aberta.
+ * @author miste
+ *
+ */
 public abstract class Base {
 
 	protected int roomID;

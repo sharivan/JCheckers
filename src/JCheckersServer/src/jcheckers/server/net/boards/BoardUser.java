@@ -7,9 +7,7 @@ import java.util.List;
 import jcheckers.common.io.JCheckersDataOutputStream;
 import jcheckers.server.io.boards.BoardOutputProtocol;
 import jcheckers.server.net.User;
-import net.jcip.annotations.ThreadSafe;
 
-@ThreadSafe
 public class BoardUser extends User {
 
 	private int rating;

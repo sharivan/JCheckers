@@ -3,8 +3,6 @@
 	<name>common_lib</name>
 	<comment></comment>
 	<projects>
-		<project>AntigoAtra</project>
-		<project>Atrativa</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

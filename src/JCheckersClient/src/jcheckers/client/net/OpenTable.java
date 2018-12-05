@@ -8,6 +8,12 @@ import jcheckers.common.io.JCheckersDataInputStream;
 import jcheckers.common.io.JCheckersDataOutputStream;
 import jcheckers.common.io.JCheckersIOException;
 
+/**
+ * 
+ * Implementa as funções da conexão com uma mesa de jogos aberta.
+ * @author miste
+ *
+ */
 public abstract class OpenTable extends Base {
 
 	@SuppressWarnings("unused")

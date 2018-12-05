@@ -1,5 +1,6 @@
 package jcheckers.server.io;
 
+import java.util.HashMap;
 import java.util.List;
 
 import jcheckers.common.io.JCheckersDataOutputStream;
@@ -116,6 +117,17 @@ public class OutputProtocol {
 
 	public OutputProtocol(JCheckersDataOutputStream output) {
 		this.output = output;
+	}
+	
+	public void check() throws DuplicateOpcodeException {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < opcodes.length; i++) {
+			Integer opcode = map.get(opcodes[i]);
+			if (opcode != null)
+				throw new DuplicateOpcodeException(opcode);
+			
+			map.put(opcode, opcode);
+		}
 	}
 
 	public void adminChat(String name, String message) {

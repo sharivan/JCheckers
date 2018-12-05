@@ -30,6 +30,7 @@ import common.io.Log;
 import common.process.TimeOutException;
 import common.util.DateTimeUtil;
 import common.util.Tree;
+import jcheckers.server.io.DuplicateOpcodeException;
 import jcheckers.server.net.Server;
 
 public class Core {
@@ -284,7 +285,7 @@ public class Core {
 			servers.put(serverName, server);
 
 			log.logToOut(serverName + " is open.");
-		} catch (ClassNotFoundException | IOException | SQLException | InstantiationException | IllegalAccessException e) {
+		} catch (ClassNotFoundException | IOException | SQLException | InstantiationException | IllegalAccessException | DuplicateOpcodeException e) {
 			log.logToErr(e);
 		} catch (InterruptedException e) {
 		}

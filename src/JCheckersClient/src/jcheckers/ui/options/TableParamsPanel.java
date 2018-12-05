@@ -12,6 +12,12 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+/**
+ * 
+ * Implementa o painel de parâmetros da mesa.
+ * @author miste
+ *
+ */
 public class TableParamsPanel extends JPanel {
 
 	/**

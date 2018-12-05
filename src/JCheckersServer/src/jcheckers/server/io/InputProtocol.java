@@ -1,5 +1,7 @@
 package jcheckers.server.io;
 
+import java.util.HashMap;
+
 import jcheckers.common.io.JCheckersDataInputStream;
 
 public class InputProtocol {
@@ -47,6 +49,17 @@ public class InputProtocol {
 
 	public InputProtocol(JCheckersDataInputStream input) {
 		this.input = input;
+	}
+	
+	public void check() throws DuplicateOpcodeException {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < opcodes.length; i++) {
+			Integer opcode = map.get(opcodes[i]);
+			if (opcode != null)
+				throw new DuplicateOpcodeException(opcode);
+			
+			map.put(opcode, opcode);
+		}
 	}
 
 	public int getOpcode(int index) {

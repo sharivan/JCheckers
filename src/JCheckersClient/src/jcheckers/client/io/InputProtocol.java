@@ -2,6 +2,12 @@ package jcheckers.client.io;
 
 import jcheckers.common.io.JCheckersDataInputStream;
 
+/**
+ * 
+ * Contém os opcodes utilizados no protocolo de entrada, vindo do servidor.
+ * @author miste
+ *
+ */
 public class InputProtocol {
 
 	public static final int MY_ID = 0x08;

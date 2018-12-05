@@ -31,8 +31,20 @@ import jcheckers.common.logic.boards.draughts.DraughtsMan;
 import jcheckers.common.logic.boards.draughts.DraughtsPiece;
 import jcheckers.ui.ImageList;
 
+/**
+ * 
+ * Componente Swing que implementa as funções de desenho de um tabuleiro de damas.
+ * @author miste
+ *
+ */
 public class GameBoard extends JPanel {
 
+	/**
+	 * 
+	 * Uma peça do tabuleiro.
+	 * @author miste
+	 *
+	 */
 	public class Piece {
 
 		private BoardPosition position;
@@ -69,34 +81,66 @@ public class GameBoard extends JPanel {
 			}
 		}
 
+		/**
+		 * 
+		 * @return Coluna da peça no tabuleiro.
+		 */
 		public int getCol() {
 			return position.getCol();
 		}
 
+		/**
+		 * 
+		 * @return Cor da peça.
+		 */
 		public PieceColor getColor() {
 			return color;
 		}
 
+		/**
+		 * 
+		 * @return Posição da peça no tabuleiro.
+		 */
 		public BoardPosition getPosition() {
 			return position;
 		}
 
+		/**
+		 * 
+		 * @return Fileira da peça no tabuleiro.
+		 */
 		public int getRow() {
 			return position.getRow();
 		}
 
+		/**
+		 * 
+		 * @return Coordenada x da peça no tabuleiro.
+		 */
 		public int getX() {
 			return x;
 		}
 
+		/**
+		 * 
+		 * @return Coordenada y da peça no tabuleiro.
+		 */
 		public int getY() {
 			return y;
 		}
 
+		/**
+		 * 
+		 * @return true se a peça está sendo arrastada, false caso contrário.
+		 */
 		public boolean isDragging() {
 			return dragging;
 		}
 
+		/**
+		 * 
+		 * @return true se a peça for uma dama, false caso contrário.
+		 */
 		public boolean isKing() {
 			return king;
 		}
@@ -129,21 +173,42 @@ public class GameBoard extends JPanel {
 				g2D.drawImage(img, x, y, size, size, null);
 		}
 
+		/**
+		 * 
+		 * Altera a cor da peça.
+		 * @param color
+		 */
 		public void setColor(PieceColor color) {
 			this.color = color;
 			repaint();
 		}
 
+		/**
+		 * 
+		 * Altera o tipo da peça.
+		 * @param value Se true, a peça será uma dama, se false ela será um peão.
+		 */
 		public void setKing(boolean value) {
 			king = value;
 			repaint();
 		}
 
+		/**
+		 * 
+		 * Altera a posição da peça.
+		 * @param position
+		 */
 		public void setPosition(BoardPosition position) {
 			this.position = position;
 			repaint();
 		}
 
+		/**
+		 * 
+		 * Altera a posição da peça.
+		 * @param row Fileira
+		 * @param col Coluna
+		 */
 		public void setPosition(int row, int col) {
 			this.setPosition(new BoardPosition(row, col));
 		}
@@ -160,6 +225,12 @@ public class GameBoard extends JPanel {
 	private static final Stroke HIGHLIGHT_STROKE = new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 	private static final int DEFAULT_SIZE = 200;
 
+	/**
+	 * 
+	 * Gera uma estrutura de árvore com base na lista de movimentos passada como parâmetro.
+	 * @param moveList
+	 * @return
+	 */
 	private static Tree<BoardPosition> buildMoveTree(List<BoardMove> moveList) {
 		if (moveList == null || moveList.size() == 0)
 			return null;
@@ -172,6 +243,13 @@ public class GameBoard extends JPanel {
 		return result;
 	}
 
+	/**
+	 * 
+	 * Gera uma estrutura de árvore com base no nó pai, na lista de movimentos e no índice passadas como parâmetros.
+	 * @param parent Nó pai
+	 * @param move Lista de movimentos
+	 * @param index Índice do movimento na lista de movimentos
+	 */
 	private static void buildMoveTree(Node<BoardPosition> parent, BoardMove move, int index) {
 		if (index >= move.count())
 			return;
@@ -182,12 +260,19 @@ public class GameBoard extends JPanel {
 		buildMoveTree(parent, move, index + 1);
 	}
 
+	/**
+	 * Objeto relacionado a lógica do jogo.
+	 */
 	private DraughtsGame game;
 
+	// Imagens utilizadas para o desenho das peças.
+	
 	private Image darkImg;
 	private Image lightImg;
 	private Image bmImg;
 	private Image wmImg;
+	
+	// Imagens utilizadas para o desenho das casas do tabuleiro.
 
 	private Image bkImg;
 	private Image wkImg;
@@ -205,7 +290,6 @@ public class GameBoard extends JPanel {
 	private BoardPosition promotePosition;
 
 	private boolean showPossibleMoves;
-
 	private boolean highlightLastMove;
 
 	public GameBoard(ImageList imgList, DraughtsGame game) {
@@ -356,16 +440,39 @@ public class GameBoard extends JPanel {
 		repaint();
 	}
 
+	/**
+	 * 
+	 * Adiciona uma nova peça ao tabuleiro
+	 * @param row
+	 * @param col
+	 * @param color
+	 * @param king
+	 * @return
+	 */
 	public Piece addPiece(int row, int col, PieceColor color, boolean king) {
 		Piece piece = new Piece(row, col, color, king);
 		pieces.add(piece);
 		return piece;
 	}
 
+	/**
+	 * Fecha o tabuleiro.
+	 * 
+	 * Este método deve ser chamado sempre que este objeto não for mais utilizado, para a liberação de recursos.
+	 */
 	public void close() {
 		setGame(null);
 	}
 
+	/**
+	 * 
+	 * Desenha uma casa do tabuleiro.
+	 * @param g2D
+	 * @param x
+	 * @param y
+	 * @param size
+	 * @param color
+	 */
 	private void drawSquare(Graphics2D g2D, int x, int y, int size, SquareColor color) {
 		Image img = null;
 		switch (color) {
@@ -381,6 +488,10 @@ public class GameBoard extends JPanel {
 		g2D.drawImage(img, x, y, size, size, null);
 	}
 
+	/**
+	 * 
+	 * @return Quantidade de peças escuras.
+	 */
 	public int getBlackCount() {
 		int result = 0;
 		for (Piece piece : pieces)
@@ -390,6 +501,10 @@ public class GameBoard extends JPanel {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return Quantidade de damas escuras.
+	 */
 	public int getBlackKingCount() {
 		int result = 0;
 		for (Piece piece : pieces)
@@ -399,6 +514,10 @@ public class GameBoard extends JPanel {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return Quantidade de peões escuros.
+	 */
 	public int getBlackManCount() {
 		int result = 0;
 		for (Piece piece : pieces)
@@ -408,6 +527,10 @@ public class GameBoard extends JPanel {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return Quantidade de colunas do tabuleiro.
+	 */
 	public int getColCount() {
 		return game != null ? game.getColCount() : 8;
 	}
@@ -416,6 +539,10 @@ public class GameBoard extends JPanel {
 		return game;
 	}
 
+	/**
+	 * 
+	 * @return Quantidade de damas.
+	 */
 	public int getKingCount() {
 		int result = 0;
 		for (Piece piece : pieces)
@@ -425,6 +552,10 @@ public class GameBoard extends JPanel {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return Quantidade de peões
+	 */
 	public int getManCount() {
 		int result = 0;
 		for (Piece piece : pieces)
@@ -434,14 +565,30 @@ public class GameBoard extends JPanel {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param index Índice da peça na lista de peças
+	 * @return Peça associada ao índice passado como parâmetro.
+	 */
 	public Piece getPiece(int index) {
 		return pieces.get(index);
 	}
 
+	/**
+	 * 
+	 * @param pos Posição da peça (fileira e coluna)
+	 * @return Peça associada a posição passada como parâmetro. Se nenhuma peça for localizada nessa posição, null é retornado.
+	 */
 	public Piece getPieceAt(BoardPosition pos) {
 		return getPieceAt(pos.getRow(), pos.getCol());
 	}
 
+	/**
+	 * 
+	 * @param row Fileira
+	 * @param col Coluna
+	 * @return Peça associada a fileira e a coluna passados como parâmetro. Se nenhuma peça for localizada nessa posição, null é retornado.
+	 */
 	public Piece getPieceAt(int row, int col) {
 		for (Piece piece : pieces)
 			if (piece.getRow() == row && piece.getCol() == col)
@@ -450,6 +597,12 @@ public class GameBoard extends JPanel {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param x Coordenada x
+	 * @param y Coordenada y
+	 * @return Peça associada a coordenada (x, y) passada como par6ametro. Se não for encontrada nenhuma peça nessas coordenadas, null é retornado.
+	 */
 	public Piece getPieceAtCoords(int x, int y) {
 		int squareWidth = getSquareSize();
 		int squareHeight = getSquareSize();
@@ -463,10 +616,18 @@ public class GameBoard extends JPanel {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @return Quantidade de peças no tabuleiro.
+	 */
 	public int getPieceCount() {
 		return pieces.size();
 	}
 
+	/**
+	 * 
+	 * @return Quantidade de fileiras do tabuleiro.
+	 */
 	public int getRowCount() {
 		return game != null ? game.getRowCount() : 8;
 	}
@@ -475,12 +636,20 @@ public class GameBoard extends JPanel {
 		return (game != null ? game.isValidPos(position.getRow(), position.getCol()) : (position.getRow() + position.getCol() & 1) == 0) ? SquareColor.DARK : SquareColor.LIGHT;
 	}
 
+	/**
+	 * 
+	 * @return Comprimento de cada casa do tabuleiro.
+	 */
 	public int getSquareSize() {
 		int sqw = getWidth() / getColCount();
 		int sqh = getHeight() / getRowCount();
 		return Math.min(sqw, sqh);
 	}
 
+	/**
+	 * 
+	 * @return Cor associada a qual peça está com a vez da jogada.
+	 */
 	public PieceColor getTurn() {
 		if (game == null)
 			return PieceColor.NONE;
@@ -489,6 +658,10 @@ public class GameBoard extends JPanel {
 		return playerIndexToPieceColor(turn);
 	}
 
+	/**
+	 * 
+	 * @return Quantidade de peças brancas no tabuleiro.
+	 */
 	public int getWhiteCount() {
 		int result = 0;
 		for (Piece piece : pieces)
@@ -498,6 +671,10 @@ public class GameBoard extends JPanel {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return Quantidade de damas brancas.
+	 */
 	public int getWhiteKingCount() {
 		int result = 0;
 		for (Piece piece : pieces)
@@ -507,6 +684,10 @@ public class GameBoard extends JPanel {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return Quantidade de peões brancos.
+	 */
 	public int getWhitekManCount() {
 		int result = 0;
 		for (Piece piece : pieces)
@@ -516,18 +697,34 @@ public class GameBoard extends JPanel {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return true se serão destacadas as posições da última jogada efetuada, false caso contrário.
+	 */
 	public boolean isHighlightLastMove() {
 		return highlightLastMove;
 	}
 
+	/**
+	 * 
+	 * @return true se o tabuleiro está travado para a realização de movimentos pelo utilizador, false caso contrário.
+	 */
 	public boolean isLocked() {
 		return locked;
 	}
 
+	/**
+	 * 
+	 * @return true se o tabuleiro está rotacionado em 180 graus, false caso contrário.
+	 */
 	public boolean isRotated() {
 		return rotated;
 	}
 
+	/**
+	 * 
+	 * @return true se as possíveis jogadas serão mostradas com o passar do cursor do mouse sobre cada peça, false caso contrário.
+	 */
 	public boolean isShowPossibleMoves() {
 		return showPossibleMoves;
 	}
@@ -671,6 +868,9 @@ public class GameBoard extends JPanel {
 		return PieceColor.NONE;
 	}
 
+	/**
+	 * Atualiza o estado do tabuleiro, obtendo-o do objeto relacionado a lógica do jogo.
+	 */
 	public void refresh() {
 		refreshInternal();
 		revalidate();
@@ -696,6 +896,11 @@ public class GameBoard extends JPanel {
 			}
 	}
 
+	/**
+	 * 
+	 * Atribui o objeto relacionado a lógica do jogo para o qual este tabuleiro irá interfacear.
+	 * @param game
+	 */
 	public void setGame(DraughtsGame game) {
 		if (this.game != null)
 			this.game.removeListener(gameHandler);
@@ -708,23 +913,44 @@ public class GameBoard extends JPanel {
 		refreshInternal();
 	}
 
+	/**
+	 * 
+	 * Altera o estado da exibição do destaque das últimas jogadas.
+	 * @param highlightLastMove
+	 */
 	public void setHighlightLastMove(boolean highlightLastMove) {
 		this.highlightLastMove = highlightLastMove;
 		repaint();
 	}
 
+	/**
+	 * 
+	 * Altera o estado da possibilidade de movimento das peças por parte do usuário.
+	 * @param locked
+	 */
 	public void setLocked(boolean locked) {
 		this.locked = locked;
 		repaint();
 	}
 
+	/**
+	 * 
+	 * Altera o estado de rotação em 180 graus do tabuleiro.
+	 * @param value
+	 */
 	public void setRotated(boolean value) {
 		rotated = value;
 		repaint();
 	}
 
+	/**
+	 * 
+	 * Altera o estado de exibição das possiveis jogadas legais ao passar o cursor do mouse sobre uma peça.
+	 * @param showPossibleMoves
+	 */
 	public void setShowPossibleMoves(boolean showPossibleMoves) {
 		this.showPossibleMoves = showPossibleMoves;
+		repaint();
 	}
 
 	private BoardPosition translatePosition(BoardPosition position) {

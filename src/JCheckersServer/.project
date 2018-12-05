@@ -3,11 +3,11 @@
 	<name>JCheckersServer</name>
 	<comment></comment>
 	<projects>
+		<project>JCheckersCommon</project>
 		<project>processes</project>
 		<project>databases</project>
 		<project>common_lib</project>
 		<project>json</project>
-		<project>JCheckersCommon</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

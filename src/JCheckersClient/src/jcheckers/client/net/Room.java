@@ -9,6 +9,12 @@ import java.util.Vector;
 import jcheckers.client.io.InputProtocol;
 import jcheckers.common.io.JCheckersDataInputStream;
 
+/**
+ * 
+ * Implementa as funções da conexão com uma sala de jogos.
+ * @author miste
+ *
+ */
 public abstract class Room extends Base {
 
 	public static final int PRIVATE = 1 << 1;

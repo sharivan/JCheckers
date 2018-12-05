@@ -19,7 +19,7 @@ import jcheckers.common.logic.boards.draughts.DraughtsGameListener;
 import jcheckers.common.logic.boards.draughts.DraughtsMan;
 import jcheckers.common.logic.boards.draughts.DraughtsPiece;
 import jcheckers.ui.ImageList;
-import jcheckers.ui.ImageListImpl;
+import jcheckers.ui.ResourceImageList;
 import jcheckers.ui.board.GameBoard;
 
 public class TestGameFrame extends JFrame {
@@ -55,7 +55,7 @@ public class TestGameFrame extends JFrame {
 	public TestGameFrame() {
 		queue = new ProcessQueue();
 
-		imgList = new ImageListImpl("images");
+		imgList = new ResourceImageList("images");
 		imgList.init();
 
 		addWindowListener(new WindowAdapter() {

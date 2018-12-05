@@ -4,6 +4,12 @@ import jcheckers.common.io.JCheckersDataInputStream;
 import jcheckers.common.io.JCheckersDataOutputStream;
 import jcheckers.common.io.JCheckersIOException;
 
+/**
+ * 
+ * Representa os parâmetros de uma mesa de jogos.
+ * @author miste
+ *
+ */
 public abstract class TableParams {
 
 	public static final int PUBLIC = 0;

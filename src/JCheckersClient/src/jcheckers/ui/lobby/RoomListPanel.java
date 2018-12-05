@@ -15,6 +15,12 @@ import javax.swing.ScrollPaneConstants;
 
 import jcheckers.client.net.RoomInfo;
 
+/**
+ * 
+ * Painel que implementa a lista de sala de jogos do servidor.
+ * @author miste
+ *
+ */
 public class RoomListPanel extends JPanel {
 
 	/**

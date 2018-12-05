@@ -13,6 +13,12 @@ import javax.swing.JScrollPane;
 import jcheckers.client.net.User;
 import jcheckers.client.net.boards.draughts.DraughtsUser;
 
+/**
+ * 
+ * Painel que representa uma lista de usuários da sala ou da mesa.
+ * @author miste
+ *
+ */
 public class UserListPanel extends JPanel {
 
 	/**

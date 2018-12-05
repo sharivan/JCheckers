@@ -9,6 +9,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * 
+ * Painel que implementa uma entrada da lista de sala de jogos.
+ * @author miste
+ *
+ */
 public class RoomEntryPanel extends JPanel {
 
 	/**

@@ -3,6 +3,8 @@
 	<name>JCheckersCommon</name>
 	<comment></comment>
 	<projects>
+		<project>processes</project>
+		<project>common_lib</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

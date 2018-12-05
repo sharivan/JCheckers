@@ -1,5 +1,11 @@
 package jcheckers.client.net;
 
+/**
+ * 
+ * Listener que interfaceia todos os eventos relacionados a uma mesa de jogos aberta.
+ * @author miste
+ *
+ */
 public interface TableConnectionListener extends ConnectionListener {
 
 	void onAlreadyConnected(Connection c);

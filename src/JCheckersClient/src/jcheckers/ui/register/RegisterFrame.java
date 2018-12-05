@@ -12,6 +12,12 @@ import javax.swing.JLabel;
 
 import jcheckers.ui.common.OkCancelPanel;
 
+/**
+ * 
+ * Implementa o formulário de registro.
+ * @author miste
+ *
+ */
 public class RegisterFrame extends JFrame {
 
 	/**

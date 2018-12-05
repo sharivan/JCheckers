@@ -9,6 +9,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
+/**
+ * 
+ * Painel que representa uma entrada na lista de usuários da sala ou da mesa.
+ * @author miste
+ *
+ */
 public class UserEntryPanel extends JPanel {
 
 	/**

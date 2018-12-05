@@ -2,6 +2,12 @@ package jcheckers.client.io;
 
 import jcheckers.common.io.JCheckersDataOutputStream;
 
+/**
+ * 
+ * Contém os opcodes utilizados no protocolo de saída, enviados ao servidor.
+ * @author miste
+ *
+ */
 public class OutputProtocol {
 
 	public static final int HELLO = 0x01;

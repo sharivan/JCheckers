@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="JCheckersCommon">
         <wb-resource deploy-path="/" source-path="/src"/>
+        <dependent-module archiveName="processes.jar" deploy-path="/" handle="module:/resource/processes/processes">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="common_lib.jar" deploy-path="/" handle="module:/resource/common_lib/common_lib">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
     </wb-module>
 </project-modules>

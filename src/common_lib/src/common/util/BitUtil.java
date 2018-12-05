@@ -72,23 +72,11 @@ public class BitUtil {
 	}
 
 	public static Iterable<Integer> bitIterable(final int bits) {
-		return new Iterable<Integer>() {
-
-			@Override
-			public Iterator<Integer> iterator() {
-				return bitIterator(bits);
-			}
-		};
+		return () -> bitIterator(bits);
 	}
 
 	public static Iterable<Integer> bitIterable(final int bits, final boolean highToLow) {
-		return new Iterable<Integer>() {
-
-			@Override
-			public Iterator<Integer> iterator() {
-				return bitIterator(bits, highToLow);
-			}
-		};
+		return () -> bitIterator(bits, highToLow);
 	}
 
 	public static Iterator<Integer> bitIterator(int bits) {

@@ -3,6 +3,12 @@ package jcheckers.client.net;
 import jcheckers.common.io.JCheckersDataInputStream;
 import jcheckers.common.io.JCheckersIOException;
 
+/**
+ * 
+ * Representa as estatísticas de um usuário, contendo informações como o número total de partidas jogadas, vítórias, derrotas, etc.
+ * @author miste
+ *
+ */
 public abstract class UserStats {
 
 	private String name;

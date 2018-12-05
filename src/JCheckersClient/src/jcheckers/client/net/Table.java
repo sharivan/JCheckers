@@ -4,6 +4,12 @@ import common.util.BitUtil;
 import jcheckers.common.io.JCheckersDataInputStream;
 import jcheckers.common.io.JCheckersIOException;
 
+/**
+ * 
+ * Representa uma mesa de jogos visível do ponto de vista do usuário na sala, mas que não está necessariamente conectado a ela.
+ * @author miste
+ *
+ */
 public abstract class Table {
 
 	public class Seat {

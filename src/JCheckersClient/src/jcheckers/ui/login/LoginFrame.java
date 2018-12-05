@@ -13,6 +13,12 @@ import javax.swing.JLabel;
 
 import jcheckers.ui.common.OkCancelPanel;
 
+/**
+ * 
+ * Implementa o formulário de login.
+ * @author miste
+ *
+ */
 public class LoginFrame extends JFrame {
 
 	/**
