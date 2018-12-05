@@ -5,9 +5,9 @@ import jcheckers.server.io.OutputProtocol;
 
 public class BoardOutputProtocol extends OutputProtocol {
 
-	public static final int RATING_TOO_HIGH = 0x52;
-	public static final int DRAUGHTS_AND_CHESS_GAME_STATE = 0x89;
+	public static final int RATING_TOO_HIGH = 0x50;
 	public static final int PACHISI_GAME_STATE = 0x8a;
+	public static final int DRAUGHTS_AND_CHESS_GAME_STATE = 0x8b;
 	public static final int PLAYER_SUGGESTED_PAUSE_GAME = 0xa3; // string name,
 																// int id, int
 																// time
@@ -71,6 +71,7 @@ public class BoardOutputProtocol extends OutputProtocol {
 		RESPONSE_OPCODES[ALREADY_CONNECTED_ON_THE_TABLE] = 0x4f;
 		RESPONSE_OPCODES[PRIVATE_TABLE] = 0x50;
 		RESPONSE_OPCODES[NOT_ENOUGH_RATING] = 0x51;
+		RESPONSE_OPCODES[RATING_TOO_HIGH] = 0x52;
 		RESPONSE_OPCODES[WATCHERS_NOT_ALLOWED] = 0x53;
 		RESPONSE_OPCODES[NO_VACANCY_IN_THE_TABLE] = 0x54;
 		RESPONSE_OPCODES[COULD_NOT_CONNECT_TO_THE_TABLE_TRY_AGAIN_LATTER] = 0x55;
@@ -113,6 +114,7 @@ public class BoardOutputProtocol extends OutputProtocol {
 		RESPONSE_OPCODES[PLAYER_RECONNECTING] = 0x84;
 		RESPONSE_OPCODES[PLAYER_RECONNECTING_FAILED] = 0x85;
 		RESPONSE_OPCODES[YOU_CANT_WATCH_THIS_GAME] = 0x87;
+		RESPONSE_OPCODES[DRAUGHTS_AND_CHESS_GAME_STATE] = 0x89;
 		RESPONSE_OPCODES[UPDATE_USERS] = 0x8d;
 		RESPONSE_OPCODES[YOU_WAS_KICKED_BY_ADMIN] = 0x8f;
 		RESPONSE_OPCODES[OTHER_WAS_KICKED_BY_ADMIN] = 0x90;
