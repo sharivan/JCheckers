@@ -130,13 +130,15 @@ public abstract class Player {
 	protected void reset() {
 		result = MultiplayerGame.NO_RESULT;
 		abandoned = false;
+
 		if (started) {
 			started = false;
 			playing = true;
 		}
+
 		if (game.hasTime && tmrTimer != null) {
+			tmrTimer.setInterval(game.getTime() * 1000);
 			tmrTimer.reset();
-			tmrTimer.play();
 		}
 	}
 

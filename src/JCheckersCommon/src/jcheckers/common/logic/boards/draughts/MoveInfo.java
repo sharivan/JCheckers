@@ -5,6 +5,8 @@ class MoveInfo {
 	boolean capturingWithKing;
 	int maxCapturedKings;
 	boolean startedCapturingAKing;
+	int movesWithoutCapturingOrPromotion;
+	boolean resetMoveCounter;
 
 	MoveInfo() {
 

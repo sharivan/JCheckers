@@ -24,6 +24,7 @@ import jcheckers.common.logic.MultiplayerGame;
 import jcheckers.common.logic.boards.BoardMove;
 import jcheckers.common.logic.boards.BoardPiece;
 import jcheckers.common.logic.boards.BoardPosition;
+import jcheckers.common.logic.boards.draughts.DraughtsConfig;
 import jcheckers.common.logic.boards.draughts.DraughtsGame;
 import jcheckers.common.logic.boards.draughts.DraughtsGameListener;
 import jcheckers.common.logic.boards.draughts.DraughtsKing;
@@ -170,7 +171,7 @@ public class GameBoard extends JPanel {
 			}
 
 			if (img != null)
-				g2D.drawImage(img, x, y, size, size, null);
+				g2D.drawImage(img, x, y, size, size, GameBoard.this);
 		}
 
 		/**
@@ -379,7 +380,7 @@ public class GameBoard extends JPanel {
 
 			@Override
 			public void onStarted() {
-				refreshInternal();
+				refresh();
 			}
 
 			@Override
@@ -394,7 +395,17 @@ public class GameBoard extends JPanel {
 
 			@Override
 			public void onUndoLastMove() {
+				refresh();
+			}
 
+			@Override
+			public void onSetBoard(int row, int col, BoardPiece piece) {
+				refresh();
+			}
+
+			@Override
+			public void onChangeConfig(DraughtsConfig config) {
+				refresh();
 			}
 		};
 
@@ -485,7 +496,7 @@ public class GameBoard extends JPanel {
 				break;
 		}
 
-		g2D.drawImage(img, x, y, size, size, null);
+		g2D.drawImage(img, x, y, size, size, GameBoard.this);
 	}
 
 	/**
@@ -910,7 +921,7 @@ public class GameBoard extends JPanel {
 		if (game != null)
 			game.addListener(gameHandler);
 
-		refreshInternal();
+		refresh();
 	}
 
 	/**

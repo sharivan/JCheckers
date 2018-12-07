@@ -60,7 +60,8 @@ public final class DraughtsMan extends DraughtsPiece implements Man {
 							game.setBoardInternal(dstRow, dstCol, piece);
 							piece.generateCaptureList(signal(dx1), signal(dy1), node1);
 							piece.release();
-						}
+						} else if (!game.stopCapturingAtLastRow())
+							generateCaptureList(dstRow, dstCol, node1);
 					} else
 						generateCaptureList(dstRow, dstCol, node1);
 

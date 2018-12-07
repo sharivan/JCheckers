@@ -2,6 +2,7 @@ package jcheckers.server.net.boards.draughts;
 
 import jcheckers.common.logic.MultiplayerGame;
 import jcheckers.common.logic.Player;
+import jcheckers.common.logic.boards.BoardPiece;
 import jcheckers.common.logic.boards.draughts.DraughtsConfig;
 import jcheckers.common.logic.boards.draughts.DraughtsGame;
 import jcheckers.common.logic.boards.draughts.DraughtsGameController;
@@ -23,13 +24,21 @@ public class DraughtsTable extends BoardTable {
 
 		@Override
 		public void onCapture(DraughtsPiece piece, int row, int col) {
-			// TODO Auto-generated method stub
 
 		}
 
 		@Override
 		public void onPromote(DraughtsMan man, int row, int col) {
-			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onSetBoard(int row, int col, BoardPiece piece) {
+
+		}
+
+		@Override
+		public void onChangeConfig(DraughtsConfig config) {
 
 		}
 

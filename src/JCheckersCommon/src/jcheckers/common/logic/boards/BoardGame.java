@@ -20,7 +20,7 @@ public abstract class BoardGame extends MultiplayerGame {
 
 	public static final int DEFAULT_PAUSE_TIME = 10;
 
-	private BoardPiece[][] board;
+	protected BoardPiece[][] board;
 
 	protected BoardMove partialMove;
 	protected List<BoardMove> moveHistory;
@@ -419,6 +419,10 @@ public abstract class BoardGame extends MultiplayerGame {
 
 	public final void setBoard(int row, int col, BoardPiece piece) {
 		setBoard(new BoardPosition(row, col), piece);
+		
+		for (GameListener listener: listeners)
+			if (listener != null && listener instanceof BoardGameListener)
+				((BoardGameListener) listener).onSetBoard(row, col, piece);
 	}
 
 	protected void setBoardInternal(BoardPosition position, BoardPiece piece) {

@@ -8,6 +8,7 @@ import jcheckers.common.logic.GameListener;
 import jcheckers.common.logic.Player;
 import jcheckers.common.logic.boards.BoardGame;
 import jcheckers.common.logic.boards.BoardMove;
+import jcheckers.common.logic.boards.BoardPiece;
 import jcheckers.common.logic.boards.BoardPosition;
 
 public final class DraughtsGame extends BoardGame {
@@ -37,22 +38,9 @@ public final class DraughtsGame extends BoardGame {
 		config = DraughtsConfig.BRAZILIAN;
 
 		players = (DraughtsPlayer[]) super.players;
-
-		int size = getSize();
-		int pieceCount = size * (size - 2) / 4;
-
-		whiteMen = new DraughtsMan[pieceCount];
-		whiteKings = new DraughtsKing[pieceCount];
-		for (int i = 0; i < whiteMen.length; i++) {
-			whiteMen[i] = new DraughtsMan(this, 0);
-			whiteKings[i] = new DraughtsKing(this, 0);
-		}
-		blackMen = new DraughtsMan[pieceCount];
-		blackKings = new DraughtsKing[pieceCount];
-		for (int i = 0; i < blackMen.length; i++) {
-			blackMen[i] = new DraughtsMan(this, 1);
-			blackKings[i] = new DraughtsKing(this, 1);
-		}
+		
+		board = new BoardPiece[getColCount()][getRowCount()];
+		setupBoard();
 	}
 
 	DraughtsKing acquireKing(int playerIndex) {
@@ -179,6 +167,7 @@ public final class DraughtsGame extends BoardGame {
 			if (man.gotLastRow())
 				if (hasMore) {
 					if (manCanBecomeKingDuringCapture()) {
+						info.resetMoveCounter = true;
 						DraughtsKing king = man.promote();
 						setBoardInternal(dstRow, dstCol, king);
 
@@ -191,6 +180,7 @@ public final class DraughtsGame extends BoardGame {
 								}
 					}
 				} else {
+					info.resetMoveCounter = true;
 					DraughtsKing king = man.promote();
 					setBoardInternal(dstRow, dstCol, king);
 
@@ -208,6 +198,9 @@ public final class DraughtsGame extends BoardGame {
 			int capturedRow = dstRow > srcRow ? srcRow + i : srcRow - i;
 			int capturedCol = dstCol > srcCol ? srcCol + i : srcCol - i;
 			DraughtsPiece captured = getBoardInternal(capturedRow, capturedCol);
+			if (captured != null)
+				info.resetMoveCounter = true;
+			
 			setBoardInternal(capturedRow, capturedCol, null);
 
 			for (GameListener listener : listeners)
@@ -327,11 +320,38 @@ public final class DraughtsGame extends BoardGame {
 	}
 
 	public void setConfig(DraughtsConfig config) {
+		boolean changed = config != this.config;
 		this.config = config;
+		
+		if (changed) {
+			board = new BoardPiece[getColCount()][getRowCount()];
+			setupBoard();
+			
+			for (GameListener listener: listeners)
+				if (listener != null && listener instanceof DraughtsGameListener)
+					((DraughtsGameListener) listener).onChangeConfig(config);
+		}
 	}
 
 	@Override
 	protected void setupBoard() {
+		int size = getSize();
+		int pieceCount = size * (size - 2) / 4;
+
+		whiteMen = new DraughtsMan[pieceCount];
+		whiteKings = new DraughtsKing[pieceCount];
+		for (int i = 0; i < whiteMen.length; i++) {
+			whiteMen[i] = new DraughtsMan(this, 0);
+			whiteKings[i] = new DraughtsKing(this, 0);
+		}
+
+		blackMen = new DraughtsMan[pieceCount];
+		blackKings = new DraughtsKing[pieceCount];
+		for (int i = 0; i < blackMen.length; i++) {
+			blackMen[i] = new DraughtsMan(this, 1);
+			blackKings[i] = new DraughtsKing(this, 1);
+		}
+		
 		blackManIndex = 0;
 		blackKingIndex = 0;
 		whiteManIndex = 0;
@@ -344,7 +364,6 @@ public final class DraughtsGame extends BoardGame {
 			whiteKings[i].setPosition(null);
 		}
 
-		int size = getSize();
 		for (int row = 0; row < size / 2 - 1; row++)
 			for (int col = 0; col < size; col++) {
 				if (!isValidPos(row, col))
@@ -405,6 +424,139 @@ public final class DraughtsGame extends BoardGame {
 		}
 
 		return "?";
+	}
+	
+	public boolean stopCapturingAtLastRow() {
+		return config.stopCapturingAtLastRow();
+	}
+	
+	protected void afterStart() {
+		super.afterStart();
+
+		info.movesWithoutCapturingOrPromotion = 0;
+		info.resetMoveCounter = false;
+	}
+	
+	protected void afterNextTurn() {
+		super.afterNextTurn();
+
+		if (!isRunning())
+			return;
+
+		if (info.resetMoveCounter) {
+			info.resetMoveCounter = false;
+			info.movesWithoutCapturingOrPromotion = 0;
+		} else
+			info.movesWithoutCapturingOrPromotion++;
+
+		if (hasAutoDraw() && info.movesWithoutCapturingOrPromotion >= config.getMinimalNumberMovesToDraw() && !hasCaptures)
+			stop(StopReason.DRAW);
+	}
+	
+	public String toStateString() {
+		String result = "";
+		for (int row = 7; row >= 0; row--)
+			for (int col = 0; col < 8; col++) {
+				DraughtsPiece piece = getBoardInternal(row, col);
+
+				if (piece == null)
+					result += " ";
+				else if (piece.isRedMan())
+					result += "r";
+				else if (piece.isRedKing())
+					result += "R";
+				else if (piece.isWhiteMan())
+					result += "w";
+				else if (piece.isWhiteKing())
+					result += "W";
+
+				result += " ";
+			}
+
+		return result;
+	}
+	
+	public void setupPosition(String position, int turn) {
+		setupPosition(parsePosition(position), turn);
+	}
+	
+	public void setupPosition(int[][] position, int turn) {
+		blackManIndex = 0;
+		blackKingIndex = 0;
+		whiteManIndex = 0;
+		whiteKingIndex = 0;
+
+		for (int i = 0; i < blackMen.length; i++) {
+			blackMen[i].setPosition(null);
+			blackKings[i].setPosition(null);
+			whiteMen[i].setPosition(null);
+			whiteKings[i].setPosition(null);
+		}
+
+		int size = getSize();
+		for (int row = 0; row < size; row++)
+			for (int col = 0; col < size; col++) {
+				if (!isValidPos(row, col))
+					continue;
+
+				switch (position[col][row]) {
+					case 1:
+						setBoardInternal(row, col, acquireMan(WHITE));
+						break;
+
+					case 2:
+						setBoardInternal(row, col, acquireMan(BLACK));
+						break;
+
+					case 3:
+						setBoardInternal(row, col, acquireKing(WHITE));
+						break;
+
+					case 4:
+						setBoardInternal(row, col, acquireKing(BLACK));
+						break;
+				}
+			}
+
+		setCurrentTurn(turn);
+		generateMoveList();
+	}
+	
+	private static int[][] parsePosition(String src) {
+		int[][] result = new int[8][8];
+
+		int pos = 0;
+		for (int row = 7; row >= 0; row--)
+			for (int col = 0; col < 8; col++) {
+				char piece = src.charAt(pos);
+				pos += 2;
+
+				switch (piece) {
+					case ' ':
+						result[col][row] = 0;
+						break;
+
+					case 'w':
+						result[col][row] = 1;
+						break;
+
+					case 'b':
+					case 'r':
+						result[col][row] = 2;
+						break;
+
+					case 'W':
+						result[col][row] = 3;
+						break;
+
+					case 'B':
+					case 'R':
+						result[col][row] = 4;
+						break;
+				}
+			}
+
+		return result;
 	}
 
 }

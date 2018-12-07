@@ -12,6 +12,7 @@ import jcheckers.common.logic.boards.BoardGame;
 import jcheckers.common.logic.boards.BoardGameController;
 import jcheckers.common.logic.boards.BoardGameListener;
 import jcheckers.common.logic.boards.BoardMove;
+import jcheckers.common.logic.boards.BoardPiece;
 import jcheckers.common.logic.boards.BoardPlayer;
 import jcheckers.common.logic.boards.BoardPosition;
 import jcheckers.common.logic.boards.RatingSystem;
@@ -138,6 +139,11 @@ public abstract class BoardTable extends Table {
 		public void onUndoLastMove() {
 			if (DEBUG)
 				logToOut("Game undo last move.");
+		}
+
+		@Override
+		public void onSetBoard(int row, int col, BoardPiece piece) {
+
 		}
 	}
 
@@ -338,9 +344,10 @@ public abstract class BoardTable extends Table {
 			output.writeInt(game.getState() == BoardGame.CREATED ? 1557409520 : 0);
 			output.writeChar(3);
 			output.writeInt(0);
+			
 			List<Player> players = game.players();
 			if (game.getState() != BoardGame.CREATED) {
-				output.writeChar(2);
+				output.writeChar(players.size());
 				for (int i = 0; i < players.size(); i++) {
 					Player player = players.get(i);
 					if (player != null && player.isPlaying())
@@ -350,6 +357,7 @@ public abstract class BoardTable extends Table {
 				}
 			} else
 				output.writeChar(0);
+			
 			output.writeChar(0);
 			output.writeInt(0);
 

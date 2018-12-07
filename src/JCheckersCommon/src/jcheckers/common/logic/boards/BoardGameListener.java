@@ -16,4 +16,6 @@ public interface BoardGameListener extends GameListener {
 
 	void onUndoLastMove();
 
+	void onSetBoard(int row, int col, BoardPiece piece);
+
 }

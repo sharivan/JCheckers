@@ -1,10 +1,8 @@
 package jcheckers.ui.game;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -14,7 +12,6 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -43,6 +40,7 @@ import jcheckers.client.net.boards.draughts.OpenDraughtsTable.DraughtsMove;
 import jcheckers.common.logic.Game.StopReason;
 import jcheckers.common.logic.Player;
 import jcheckers.common.logic.boards.BoardMove;
+import jcheckers.common.logic.boards.BoardPiece;
 import jcheckers.common.logic.boards.BoardPosition;
 import jcheckers.common.logic.boards.draughts.DraughtsConfig;
 import jcheckers.common.logic.boards.draughts.DraughtsGame;
@@ -460,6 +458,8 @@ public class TableFrame extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 2466747814427990717L;
+	
+	private static final DraughtsConfig[] configs = {DraughtsConfig.BRAZILIAN, DraughtsConfig.INTERNATIONAL, DraughtsConfig.AMERICAN, DraughtsConfig.AMERICAN10x10};
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
@@ -508,9 +508,6 @@ public class TableFrame extends JFrame {
 
 	private JPanel contentPane;
 
-	private JLabel lblPlayer1;
-	private JLabel lblPlayer2;
-
 	private GameBoard board;
 
 	private ChatPanel pnlChat;
@@ -530,11 +527,12 @@ public class TableFrame extends JFrame {
 
 	private JButton btnRefreshTableParameters;
 
-	private JLabel[] lblPlayers;
-	private JButton[] btnSeats;
-
 	private JPanel pnlPlayers;
 
+	private SeatPanel[] players;
+	private SeatPanel pnlPlayer1;
+	private SeatPanel pnlPlayer2;
+	
 	private JPanel pnlGameControls;
 
 	private JButton btnStartGame;
@@ -544,11 +542,6 @@ public class TableFrame extends JFrame {
 	private JButton btnOfferDraw;
 
 	private JButton btnResign;
-
-	private JPanel pnlPlayer1;
-	private JPanel pnlPlayer2;
-	private JButton btnSit1;
-	private JButton btnSit2;
 
 	/**
 	 * Create the frame.
@@ -648,6 +641,16 @@ public class TableFrame extends JFrame {
 			public void onUndoLastMove() {
 				System.out.println("Undo last move!");
 			}
+
+			@Override
+			public void onSetBoard(int row, int col, BoardPiece piece) {
+
+			}
+
+			@Override
+			public void onChangeConfig(DraughtsConfig config) {
+
+			}
 		});
 
 		game.setConfig(DraughtsConfig.AMERICAN);
@@ -678,8 +681,7 @@ public class TableFrame extends JFrame {
 			}
 		});
 
-		lblPlayers = new JLabel[2];
-		btnSeats = new JButton[2];
+		players = new SeatPanel[2];
 
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 814, 734);
@@ -701,7 +703,6 @@ public class TableFrame extends JFrame {
 
 		pnlPlayers = new JPanel();
 		pnlPlayers.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		pnlPlayers.setPreferredSize(new Dimension(100, 50));
 		GridBagConstraints gbc_pnlPlayers = new GridBagConstraints();
 		gbc_pnlPlayers.insets = new Insets(0, 0, 5, 0);
 		gbc_pnlPlayers.gridx = 0;
@@ -711,85 +712,15 @@ public class TableFrame extends JFrame {
 		pnlControls.add(pnlPlayers, gbc_pnlPlayers);
 		pnlPlayers.setLayout(new GridLayout(2, 0, 0, 0));
 
-		pnlPlayer1 = new JPanel();
-		pnlPlayer1.setOpaque(true);
-		pnlPlayer1.setFont(new Font("Tahoma", Font.BOLD, 11));
-		pnlPlayer1.setForeground(Color.WHITE);
-		pnlPlayer1.setBackground(ChatPanel.CHAT_BACKGROUND_COLOR);
+		pnlPlayer1 = new SeatPanel(imgList, 0);
+		pnlPlayer1.addListener((sitIndex) -> sit(sitIndex));
 		pnlPlayers.add(pnlPlayer1);
-		GridBagLayout gbl_pnlPlayer1 = new GridBagLayout();
-		gbl_pnlPlayer1.columnWidths = new int[] { 0, 0, 0 };
-		gbl_pnlPlayer1.rowHeights = new int[] { 0, 0 };
-		gbl_pnlPlayer1.columnWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
-		gbl_pnlPlayer1.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-		pnlPlayer1.setLayout(gbl_pnlPlayer1);
+		players[0] = pnlPlayer1;
 
-		lblPlayer1 = new JLabel("(Vazio)");
-		lblPlayer1.setOpaque(true);
-		lblPlayer1.setForeground(Color.WHITE);
-		lblPlayer1.setBackground(ChatPanel.CHAT_BACKGROUND_COLOR);
-		lblPlayer1.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblPlayer1.setHorizontalAlignment(SwingConstants.CENTER);
-		GridBagConstraints gbc_lblPlayer1 = new GridBagConstraints();
-		gbc_lblPlayer1.fill = GridBagConstraints.BOTH;
-		gbc_lblPlayer1.insets = new Insets(0, 0, 0, 5);
-		gbc_lblPlayer1.gridx = 0;
-		gbc_lblPlayer1.gridy = 0;
-		pnlPlayer1.add(lblPlayer1, gbc_lblPlayer1);
-		lblPlayers[0] = lblPlayer1;
-
-		btnSit1 = new JButton("Sentar");
-		btnSit1.setOpaque(true);
-		btnSit1.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnSit1.setForeground(Color.WHITE);
-		btnSit1.setBackground(ChatPanel.CHAT_BACKGROUND_COLOR);
-		btnSit1.addActionListener((e) -> sit(0));
-		GridBagConstraints gbc_btnSit1 = new GridBagConstraints();
-		gbc_btnSit1.fill = GridBagConstraints.BOTH;
-		gbc_btnSit1.gridx = 1;
-		gbc_btnSit1.gridy = 0;
-		pnlPlayer1.add(btnSit1, gbc_btnSit1);
-		btnSeats[0] = btnSit1;
-
-		pnlPlayer2 = new JPanel();
-		pnlPlayer2.setOpaque(true);
-		pnlPlayer2.setFont(new Font("Tahoma", Font.BOLD, 11));
-		pnlPlayer2.setForeground(Color.RED);
-		pnlPlayer2.setBackground(ChatPanel.CHAT_BACKGROUND_COLOR);
+		pnlPlayer2 = new SeatPanel(imgList, 1);
+		pnlPlayer2.addListener((sitIndex) -> sit(sitIndex));
 		pnlPlayers.add(pnlPlayer2);
-		GridBagLayout gbl_pnlPlayer2 = new GridBagLayout();
-		gbl_pnlPlayer2.columnWidths = new int[] { 0, 0, 0 };
-		gbl_pnlPlayer2.rowHeights = new int[] { 0, 0 };
-		gbl_pnlPlayer2.columnWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
-		gbl_pnlPlayer2.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-		pnlPlayer2.setLayout(gbl_pnlPlayer2);
-
-		lblPlayer2 = new JLabel("(Vazio)");
-		lblPlayer2.setOpaque(true);
-		lblPlayer2.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblPlayer2.setForeground(Color.RED);
-		lblPlayer2.setBackground(ChatPanel.CHAT_BACKGROUND_COLOR);
-		GridBagConstraints gbc_lblPlayer2 = new GridBagConstraints();
-		gbc_lblPlayer2.fill = GridBagConstraints.BOTH;
-		gbc_lblPlayer2.insets = new Insets(0, 0, 0, 5);
-		gbc_lblPlayer2.gridx = 0;
-		gbc_lblPlayer2.gridy = 0;
-		pnlPlayer2.add(lblPlayer2, gbc_lblPlayer2);
-		lblPlayers[1] = lblPlayer2;
-		lblPlayer2.setHorizontalAlignment(SwingConstants.CENTER);
-
-		btnSit2 = new JButton("Sentar");
-		btnSit2.setOpaque(true);
-		btnSit2.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnSit2.setForeground(Color.RED);
-		btnSit2.setBackground(ChatPanel.CHAT_BACKGROUND_COLOR);
-		btnSit2.addActionListener((e) -> sit(1));
-		GridBagConstraints gbc_btnSit2 = new GridBagConstraints();
-		gbc_btnSit2.fill = GridBagConstraints.BOTH;
-		gbc_btnSit2.gridx = 1;
-		gbc_btnSit2.gridy = 0;
-		pnlPlayer2.add(btnSit2, gbc_btnSit2);
-		btnSeats[1] = btnSit2;
+		players[1] = pnlPlayer2;
 
 		pnlRight.addTab("Controles", null, pnlControls, null);
 
@@ -972,6 +903,8 @@ public class TableFrame extends JFrame {
 
 	private void handleGameState(int gameID, int gameType, boolean running, int gameState, int currentTurn, int timePerTurn, int[] times, DraughtsMove[] moves) {
 		this.running = running;
+		
+		game.setConfig(configs[gameType]);
 
 		for (int i = turnNum; i < moves.length; i++) {
 			DraughtsMove move = moves[i];
@@ -984,8 +917,27 @@ public class TableFrame extends JFrame {
 				game.doMove(new BoardMove(src, dst), true, true);
 			}
 		}
+		
+		if (table.getParams().hasTime())
+			for (int i = 0; i < times.length; i++) {
+				players[i].setHasPlayerTime(true);
+				players[i].setPlayerTime(times[i] * 1000);
+			}
+		else {
+			players[0].setHasPlayerTime(false);
+			players[1].setHasPlayerTime(false);
+		}
 
 		this.currentTurn = currentTurn;
+		if (currentTurn != 4) {
+			players[currentTurn].setHasTimePerMove(table.getParams().hasTimePerTurn());
+			players[currentTurn].setTimePerMove(timePerTurn * 1000);
+			players[currentTurn].setActive(true);
+			players[1 - currentTurn].setActive(false);
+		} else {
+			players[0].setActive(false);
+			players[1].setActive(false);
+		}
 
 		turnNum = moves.length;
 		board.setLocked(!isMyTurn());
@@ -1020,24 +972,7 @@ public class TableFrame extends JFrame {
 		turnNum = 0;
 
 		DraughtsTableParams params = table.getParams();
-		switch (params.getGameType()) {
-			case DraughtsTableParams.CLASSIC:
-				game.setConfig(DraughtsConfig.BRAZILIAN);
-				break;
-
-			case DraughtsTableParams.INTERNATIONAL:
-				game.setConfig(DraughtsConfig.INTERNATIONAL);
-				break;
-
-			case DraughtsTableParams.AMERICAN:
-				game.setConfig(DraughtsConfig.AMERICAN);
-				break;
-
-			case DraughtsTableParams.AMERICAN10x10:
-				game.setConfig(DraughtsConfig.AMERICAN10x10);
-				break;
-		}
-
+		game.setConfig(configs[params.getGameType()]);
 		game.setUseTime(false);
 		game.setUseIncrementTime(false);
 		game.setUseTimePerTurn(false);
@@ -1084,11 +1019,11 @@ public class TableFrame extends JFrame {
 			if (seat != null) {
 				DraughtsUser user = (DraughtsUser) seat.getUser();
 				tableUserList.addEntry(user);
-				lblPlayers[i].setText(user.getName());
-				btnSeats[i].setVisible(false);
+				players[i].setPlayer(user.getName());
+				players[i].setCanSeat(false);
 			} else {
-				lblPlayers[i].setText("(Vazio)");
-				btnSeats[i].setVisible(iCanSit);
+				players[i].setPlayer(null);
+				players[i].setCanSeat(iCanSit);
 			}
 		}
 
@@ -1106,6 +1041,7 @@ public class TableFrame extends JFrame {
 
 		board.setRotated(imWhite());
 		board.setLocked(!isMyTurn());
+		
 		btnRefreshTableParameters.setEnabled(imHost() && !running);
 	}
 
@@ -1177,6 +1113,7 @@ public class TableFrame extends JFrame {
 	}
 
 	private void updateTableParameters(DraughtsTableParams params) {
+		game.setConfig(configs[params.getGameType()]);
 		pnlTableParams.setVariant(params.getGameType());
 		pnlTableParams.setHasIncrementTime(params.hasIncrementTime());
 		pnlTableParams.setHasTime(params.hasTime());

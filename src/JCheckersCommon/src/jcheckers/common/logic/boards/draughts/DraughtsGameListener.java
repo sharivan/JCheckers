@@ -8,4 +8,6 @@ public interface DraughtsGameListener extends BoardGameListener {
 
 	void onPromote(DraughtsMan man, int row, int col);
 
+	void onChangeConfig(DraughtsConfig config);
+
 }

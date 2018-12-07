@@ -35,7 +35,7 @@ public abstract class DraughtsPiece extends BoardPiece {
 		super.destroy();
 	}
 
-	protected abstract void generateCaptureList(int dx, int dy, Node<DraughtsNodePosition> node);
+	protected abstract void generateCaptureList(int dr, int dc, Node<DraughtsNodePosition> node);
 
 	@Override
 	protected final void generateMoveList(List<BoardMove> moveList) {
@@ -91,7 +91,7 @@ public abstract class DraughtsPiece extends BoardPiece {
 	}
 
 	public final boolean isRedMan() {
-		return isKing() && isBlack();
+		return isMan() && isBlack();
 	}
 
 	protected abstract BoardPosition isValidSingleCapture(int dstRow, int dstCol, boolean firstCapture);
@@ -105,7 +105,7 @@ public abstract class DraughtsPiece extends BoardPiece {
 	}
 
 	public final boolean isWhiteMan() {
-		return isKing() && isWhite();
+		return isMan() && isWhite();
 	}
 
 	protected void release() {

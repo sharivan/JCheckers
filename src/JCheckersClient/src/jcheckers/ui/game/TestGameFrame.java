@@ -12,6 +12,7 @@ import common.process.ProcessQueue;
 import jcheckers.common.logic.Game.StopReason;
 import jcheckers.common.logic.Player;
 import jcheckers.common.logic.boards.BoardMove;
+import jcheckers.common.logic.boards.BoardPiece;
 import jcheckers.common.logic.boards.BoardPosition;
 import jcheckers.common.logic.boards.draughts.DraughtsConfig;
 import jcheckers.common.logic.boards.draughts.DraughtsGame;
@@ -37,7 +38,7 @@ public class TestGameFrame extends JFrame {
 			try {
 				TestGameFrame frame = new TestGameFrame();
 				frame.setVisible(true);
-				frame.setSize(new Dimension(512, 512));
+				frame.pack();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -155,6 +156,16 @@ public class TestGameFrame extends JFrame {
 			public void onUndoLastMove() {
 				System.out.println("Undo last move!");
 			}
+
+			@Override
+			public void onSetBoard(int row, int col, BoardPiece piece) {
+
+			}
+
+			@Override
+			public void onChangeConfig(DraughtsConfig config) {
+
+			}
 		});
 
 		game.setConfig(DraughtsConfig.AMERICAN);
@@ -172,6 +183,8 @@ public class TestGameFrame extends JFrame {
 		}
 
 		board = new GameBoard(imgList, game);
+		board.setPreferredSize(new Dimension(500, 500));
+		board.setLocked(false);
 		getContentPane().add(board, BorderLayout.CENTER);
 	}
 

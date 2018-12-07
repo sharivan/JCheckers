@@ -431,7 +431,6 @@ public abstract class MultiplayerGame extends Game {
 
 		if (getPlayingCount() < 2) {
 			stop();
-
 			return;
 		}
 
@@ -497,6 +496,10 @@ public abstract class MultiplayerGame extends Game {
 	public final void previousTurn() {
 		if (!beforePreviousTurn())
 			return;
+		
+		for (Player player: players)
+			if (player != null)
+				player.timerWasRunning = false;
 
 		Player player = getCurrentPlayer();
 		if (player != null && player.tmrTimer != null) {
@@ -507,6 +510,7 @@ public abstract class MultiplayerGame extends Game {
 
 		currentTurn = getPreviousTurn(currentTurn);
 
+		perMoveTurnTimerWasRunning = false;
 		player = getCurrentPlayer();
 		if (hasTime && player != null && player.tmrTimer != null)
 			player.tmrTimer.play();
@@ -540,6 +544,11 @@ public abstract class MultiplayerGame extends Game {
 
 		resetTurn();
 	}
+	
+	public void resetTimePerTurn() {
+		if (hasTimePerTurn)
+			tmrPerMoveTurn.reset();
+	}
 
 	public boolean removeListener(GameListener listener) {
 		return listeners.remove(listener);
@@ -547,6 +556,8 @@ public abstract class MultiplayerGame extends Game {
 
 	public void resetTurn() {
 		currentTurn = getInitialTurn();
+		if (hasTime)
+			players[currentTurn].tmrTimer.play();
 
 		onResetTurn();
 
